@@ -131,16 +131,16 @@ gedit
 %end
 
 %post
-# ── Garante senhas e permissões (dupla garantia) ──────────────
+# ── Garante senhas e permissões (sem senha para o técnico) ────────
 useradd -m -G wheel jardson 2>/dev/null || true
-echo 'root:2412' | chpasswd 2>/dev/null || true
-echo 'jardson:2412' | chpasswd 2>/dev/null || true
+passwd -d root 2>/dev/null || true
+passwd -d jardson 2>/dev/null || true
 
-# Patch no livesys do Fedora Live para usar 'jardson' e senha '2412' no boot
+# Patch no livesys do Fedora Live para usar 'jardson' sem senha no boot
 if [ -f /usr/sbin/livesys ]; then
     sed -i 's/liveuser/jardson/g' /usr/sbin/livesys
-    echo "echo 'jardson:2412' | chpasswd" >> /usr/sbin/livesys
-    echo "echo 'root:2412' | chpasswd" >> /usr/sbin/livesys
+    echo "passwd -d jardson" >> /usr/sbin/livesys
+    echo "passwd -d root" >> /usr/sbin/livesys
 fi
 
 # ── Auto-login sem senha no GNOME (Garante jardson) ──────────
