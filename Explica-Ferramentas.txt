@@ -60,6 +60,12 @@ guardados no HD/SSD. Veja como a ISO facilita o seu trabalho de resgate:
   Ferramenta gráfica de partição. Use para redimensionar, formatar ou verificar 
   erros em partições do sistema.
 
+* [📶 Conectar à Rede (SMB)] (conectar-rede.sh)
+  Abre janelas interativas para conectar e montar pastas compartilhadas da sua rede local
+  (Windows, NAS ou Servidor de Arquivos) na pasta /mnt/rede_local. Facilita o envio de
+  backups sem precisar usar mídias físicas.
+
+
 --------------------------------------------------------------------------------
 2. APLICATIVOS DO SISTEMA OPERACIONAL
 --------------------------------------------------------------------------------

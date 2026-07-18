@@ -10,11 +10,12 @@ show_menu() {
     choice=$(zenity --list \
         --title="🔧 Menu Técnico - EduTechAnderlineNet" \
         --text="Selecione a ferramenta de manutenção que deseja executar:" \
-        --width=620 --height=450 \
+        --width=640 --height=480 \
         --column="Ícone" --column="Opção" --column="Descrição" \
         "🔑" "Resetar Senha" "Resetar a senha de contas do Windows local" \
         "🛡️" "Scanner de Vírus" "Varredura antivírus offline com ClamAV" \
         "💾" "Backup de Perfil" "Fazer backup automático das pastas do Windows" \
+        "📶" "Conectar à Rede (SMB)" "Montar pasta compartilhada da rede local/NAS" \
         "💽" "Saúde do Disco (SMART)" "Verificar integridade física e erros do HD/SSD" \
         "ℹ️" "Info do Hardware" "Mostrar detalhes técnicos da máquina (Processador, RAM, etc)" \
         "🗃️" "GParted (Partições)" "Abrir o editor de partições de disco" \
@@ -35,6 +36,9 @@ show_menu() {
             ;;
         "Backup de Perfil")
             gnome-terminal --title="💾 Backup de Perfil Windows" -- bash -c "sudo bash '$SCRIPT_DIR/backup-perfil-automatico.sh'; echo -e '\nPressione ENTER para fechar...'; read"
+            ;;
+        "Conectar à Rede (SMB)")
+            bash "$SCRIPT_DIR/conectar-rede.sh"
             ;;
         "Saúde do Disco (SMART)")
             gnome-terminal --title="💽 Saúde do Disco (SMART)" -- bash -c "sudo bash '$SCRIPT_DIR/diagnostico-discos.sh'; echo -e '\nPressione ENTER para fechar...'; read"
