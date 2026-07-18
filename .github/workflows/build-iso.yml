@@ -71,8 +71,9 @@ jobs:
 
       - name: Verificar e renomear ISO
         run: |
-          ls -lh build/*.iso 2>/dev/null || (echo "ERRO: ISO não gerada!" && tail -100 build/build.log && exit 1)
-          find build/ -name "*.iso" ! -name "ISO-LOUCA-LXQt.iso" -exec cp {} build/ISO-LOUCA-LXQt.iso \;
+          sudo ls -lh build/*.iso 2>/dev/null || (echo "ERRO: ISO não gerada!" && sudo tail -100 build/build.log && exit 1)
+          sudo find build/ -maxdepth 1 -name "*.iso" ! -name "ISO-LOUCA-LXQt.iso" -exec cp {} build/ISO-LOUCA-LXQt.iso \;
+          sudo chown $USER:$USER build/ISO-LOUCA-LXQt.iso
           ls -lh build/ISO-LOUCA-LXQt.iso
 
       - name: Upload da ISO
