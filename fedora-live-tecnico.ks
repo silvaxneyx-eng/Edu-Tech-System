@@ -124,9 +124,6 @@ file-roller
 # ── Editor de Texto Gráfico ───────────────────────────────────
 gedit
 
-# ── Suporte a PowerShell (para rodar scripts .ps1) ────────────
-powershell
-
 # ── Excluir pacotes problemáticos ─────────────────────────────
 -*langpacks*
 -langpacks*
