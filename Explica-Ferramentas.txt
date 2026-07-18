@@ -1,0 +1,95 @@
+================================================================================
+🔧 ISO TÉCNICO EDUTECHANDERLINENET - GUIA DE FERRAMENTAS E USO 🔧
+================================================================================
+
+Este documento explica para que serve cada atalho na Área de Trabalho e cada
+aplicativo pré-instalado na sua ISO de manutenção.
+
+--------------------------------------------------------------------------------
+1. ATALHOS NA ÁREA DE TRABALHO (SCRIPTS & INTERFACES)
+--------------------------------------------------------------------------------
+
+* [🔧 Menu Técnico EduTech]
+  O painel central de controle. Abre uma janela gráfica (Zenity) para você escolher
+  qualquer um dos scripts de reparo do sistema sem precisar digitar comandos.
+
+* [🛡️ Scanner de Vírus Offline] (scanner-virus-offline.sh)
+  Monta o disco do cliente e faz uma varredura profunda em busca de vírus e 
+  malwares usando o motor ClamAV. Ideal para remover vírus difíceis que se
+  escondem quando o Windows está ligado.
+
+* [💾 Backup de Perfil] (backup-perfil-automatico.sh)
+  Detecta a partição de dados do cliente (C:\Users) e copia todas as pastas importantes
+  (Área de Trabalho, Documentos, Imagens, Downloads) para um HD externo automaticamente.
+  Utiliza o rsync para garantir que nenhum arquivo se perca.
+
+* [🔑 Resetar Senha Windows] (resetar-senha-automatico.sh)
+  Reseta a senha de qualquer conta do Windows local. Se o cliente esqueceu a senha
+  ou o usuário administrador foi desativado, essa ferramenta limpa a senha em segundos.
+
+* [💽 Diagnóstico de Discos] (diagnostico-discos.sh)
+  Faz testes rápidos de leitura física nos discos conectados e exibe o relatório S.M.A.R.T
+  de saúde (temperatura, setores defeituosos, tempo de vida útil restante).
+
+* [🗃️ GParted]
+  Ferramenta profissional gráfica de partições. Permite redimensionar partições, formatar
+  em NTFS/FAT32/ext4, e criar partições novas em HDs e SSDs.
+
+* [Montagem Automática] (montar-discos-automatico.sh)
+  Roda em background na inicialização do sistema. Detecta e monta qualquer HD/SSD do cliente
+  automaticamente na pasta /mnt/clientes/ (com suporte a gravação NTFS-3g), deixando tudo
+  pronto para uso instantaneamente.
+
+--------------------------------------------------------------------------------
+2. APLICATIVOS DO SISTEMA OPERACIONAL
+--------------------------------------------------------------------------------
+
+* [🌐 Firefox]
+  Navegador oficial. Útil para buscar esquemas de rede, manuais, ou baixar drivers
+  e ISOs de instalação de sistemas na bancada do cliente.
+
+* [🍷 Wine]
+  Camada de compatibilidade. Permite executar aplicativos .exe leves do Windows
+  diretamente dentro do Linux. Excelente para rodar executáveis portáteis de teste.
+
+* [📁 Nautilus]
+  O gerenciador de arquivos do GNOME (como o Explorer do Windows). Use-o para navegar
+  nos arquivos do cliente, copiar e colar dados manualmente.
+
+* [📊 Htop]
+  Monitor de processos moderno. Mostra consumo de memória RAM, CPU, e se há algum processo
+  travando o computador de teste.
+
+* [🖥️ Terminal]
+  Acesso ao terminal Bash raiz do Linux Fedora para rodar ferramentas rápidas de linha
+  de comando.
+
+--------------------------------------------------------------------------------
+3. FERRAMENTAS DE RECUPERAÇÃO INCLUSAS (VIA TERMINAL)
+--------------------------------------------------------------------------------
+
+* [testdisk]
+  Recupera partições inteiras que sumiram, ficaram marcadas como RAW ou foram excluídas
+  por acidente. Reconstrói a tabela de partição (MBR/GPT).
+
+* [photorec] (incluso no testdisk)
+  Faz varredura profunda no disco (mesmo formatado) em busca de cabeçalhos de arquivos.
+  Recupera fotos, documentos, vídeos e PDFs deletados acidentalmente.
+
+* [ddrescue] (GNU ddrescue)
+  Ideal para HDs ruins/batendo agulha. Copia os blocos legíveis de um HD defeituoso
+  para um HD saudável, ignorando blocos ruins para salvar o máximo de dados possível.
+
+* [nmap]
+  Varredura e diagnóstico de rede. Identifica IPs ativos, portas abertas e vulnerabilidades
+  na rede local do cliente.
+
+--------------------------------------------------------------------------------
+4. INFORMAÇÕES DE LOGIN PADRÃO (Se solicitado)
+--------------------------------------------------------------------------------
+* Usuário do Técnico: tecnico  | Senha: edutecnico
+* Administrador Root: root     | Senha: edutecnico
+* Auto-login: Sim (o sistema entra na Área de Trabalho sem pedir senha)
+================================================================================
+🔧 EduTechAnderlineNet - 2026 🔧
+================================================================================

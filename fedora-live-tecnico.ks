@@ -160,6 +160,16 @@ X-GNOME-Autostart-enabled=true
 Name=Setup Tecnico
 DTEOF
 
+# Autostart para Montagem Automática de Discos
+cat > /home/tecnico/.config/autostart/montar-discos.desktop << 'MONTEOF'
+[Desktop Entry]
+Type=Application
+Exec=bash -c "gnome-terminal --title='🔍 Montagem Automática' -- bash -c 'sudo bash /home/tecnico/Scripts/montar-discos-automatico.sh; echo; read -p \"Pressione ENTER para fechar...\"'"
+Hidden=false
+X-GNOME-Autostart-enabled=true
+Name=Montar Discos Clientes
+MONTEOF
+
 # ── Cria pasta de wallpapers ────────────────────────────────
 mkdir -p /usr/share/wallpapers/edutecnico
 mkdir -p /usr/share/gnome-background-properties
@@ -262,6 +272,10 @@ cp /build/scripts/*.ps1 $INSTALL_ROOT/home/tecnico/Scripts/ 2>/dev/null || true
 cp /build/scripts/*.cmd $INSTALL_ROOT/home/tecnico/Scripts/ 2>/dev/null || true
 chmod -R +x $INSTALL_ROOT/home/tecnico/Scripts/
 chroot $INSTALL_ROOT chown -R tecnico:tecnico /home/tecnico/Scripts 2>/dev/null || true
+
+# ── Copiar arquivo de explicação de ferramentas para o Desktop ──────
+cp /build/Explica-Ferramentas.txt $INSTALL_ROOT/home/tecnico/Desktop/ 2>/dev/null || true
+chroot $INSTALL_ROOT chown tecnico:tecnico /home/tecnico/Desktop/Explica-Ferramentas.txt 2>/dev/null || true
 
 # ── Copiar wallpapers para dentro da ISO ─────────────────────
 mkdir -p $INSTALL_ROOT/usr/share/wallpapers/edutecnico
