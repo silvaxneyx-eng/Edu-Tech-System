@@ -49,6 +49,7 @@ polkit
 NetworkManager
 NetworkManager-wifi
 nm-connection-editor
+zenity
 
 # ── Navegador e Windows Compat ───────────────────────────────
 firefox
@@ -59,6 +60,7 @@ wine-common
 # ── Gerenciamento de Partições e Discos ──────────────────────
 gparted
 testdisk
+chntpw
 ntfs-3g
 dosfstools
 e2fsprogs
@@ -149,6 +151,25 @@ cat > /etc/gdm/custom.conf << 'GDMEOF'
 AutomaticLoginEnable=True
 AutomaticLogin=jardson
 GDMEOF
+
+# ── Configurar Wallpaper na Tela de Login (GDM) ──────────────
+mkdir -p /etc/dconf/db/gdm.d
+cat > /etc/dconf/db/gdm.d/00-background << 'GDMWALL'
+[org/gnome/desktop/background]
+picture-uri='file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'
+picture-uri-dark='file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'
+picture-options='zoom'
+GDMWALL
+
+# Cria o perfil gdm se não existir
+mkdir -p /etc/dconf/profile
+cat > /etc/dconf/profile/gdm << 'GDMPROFILE'
+user-db:user
+system-db:gdm
+file-db:/usr/share/gdm/greeter-dconf-defaults
+GDMPROFILE
+
+dconf update || true
 
 # ── Cria estrutura de pastas para o jardson ──────────────────
 mkdir -p /home/jardson/Desktop

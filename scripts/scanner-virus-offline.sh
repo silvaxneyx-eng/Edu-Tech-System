@@ -45,14 +45,23 @@ for part in $particoes; do
     echo "  (Isso pode demorar vários minutos dependendo do tamanho do disco)"
     echo ""
 
-    # Escaneia as pastas mais comuns onde vírus se escondem
-    clamscan -r --bell --infected \
-        "$mount_point/Windows/Temp" \
-        "$mount_point/Users" \
-        "$mount_point/ProgramData" \
-        "$mount_point/Program Files" \
-        "$mount_point/Program Files (x86)" \
-        2>/dev/null | tee /tmp/scan_${part}.log
+    # Escaneia apenas as pastas que de fato existirem para evitar erros do clamscan
+    targets=""
+    for dir in "Windows/Temp" "Users" "ProgramData" "Program Files" "Program Files (x86)"; do
+        if [ -d "$mount_point/$dir" ]; then
+            targets="$targets \"$mount_point/$dir\""
+        fi
+    done
+
+    if [ -z "$targets" ]; then
+        targets="\"$mount_point\"" # Escaneia tudo se não achar nenhuma pasta padrão
+    fi
+
+    echo "Alvos do escaneamento: $targets"
+    echo ""
+
+    # Executa o clamscan usando eval para interpretar as aspas corretamente
+    eval "clamscan -r --bell --infected $targets" 2>/dev/null | tee /tmp/scan_${part}.log
 
     found=$(grep "Infected files:" /tmp/scan_${part}.log 2>/dev/null | awk '{print $3}')
     if [ -n "$found" ] && [ "$found" -gt 0 ]; then
