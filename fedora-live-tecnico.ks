@@ -15,7 +15,8 @@ part / --size 8192 --fstype ext4
 
 # Senha padrão: edutecnico
 rootpw --plaintext edutecnico
-user --name=tecnico --groups=wheel --password=edutecnico --gecos="Tecnico EduTech"
+user --name=tecnico --groups=wheel --password=edutecnico --plaintext --gecos="Tecnico EduTech"
+
 
 # Repositórios Oficiais do Fedora 40
 repo --name=fedora --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-40&arch=$basearch
