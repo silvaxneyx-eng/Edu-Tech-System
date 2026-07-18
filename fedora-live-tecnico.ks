@@ -244,6 +244,23 @@ EduTechAnderlineNet - ISO Técnico FULLZÃO
 Usuário: tecnico | Senha: edutecnico
 ISSUEEOF
 
+# ── Permissões Especiais: Sudo Sem Senha ─────────────────────
+echo "tecnico ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/tecnico
+chmod 0440 /etc/sudoers.d/tecnico
+
+# ── Permissões Especiais: Polkit Sem Senha para GParted ──────
+mkdir -p /etc/polkit-1/rules.d
+cat > /etc/polkit-1/rules.d/49-nopasswd-tecnico.rules << 'POLKITEOF'
+polkit.addRule(function(action, subject) {
+    if (subject.isInGroup("wheel")) {
+        return polkit.Result.YES;
+    }
+});
+POLKITEOF
+chmod 0644 /etc/polkit-1/rules.d/49-nopasswd-tecnico.rules
+chown root:root /etc/polkit-1/rules.d/49-nopasswd-tecnico.rules
+
+
 cat > /etc/motd << 'MOTDEOF'
 ============================================
  🔧 EduTechAnderlineNet - ISO Técnico FULL
