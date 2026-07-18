@@ -50,8 +50,6 @@ samba-client
 # Scanner de vírus offline:
 clamav
 clamav-update
-# Recuperação de arquivos deletados:
-photorec
 # Limpeza segura de disco:
 coreutils
 # Monitoramento e diagnóstico:
