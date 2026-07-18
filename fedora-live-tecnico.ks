@@ -15,7 +15,6 @@ part / --size 8192 --fstype ext4
 
 # Senha padrão: edutecnico
 rootpw --plaintext edutecnico
-user --name=tecnico --groups=wheel --password=edutecnico --plaintext --gecos="Tecnico EduTech"
 
 
 # Repositórios Oficiais do Fedora 40
@@ -131,28 +130,25 @@ gedit
 -geolite2*
 %end
 
-%post
-# ── Garante usuário e senha (dupla garantia) ──────────────────
-useradd -m -G wheel tecnico 2>/dev/null || true
-echo 'tecnico:edutecnico' | chpasswd 2>/dev/null || true
+# ── Garante senhas e permissões (dupla garantia) ──────────────
 echo 'root:edutecnico' | chpasswd 2>/dev/null || true
-echo 'edutecnico' | passwd --stdin tecnico 2>/dev/null || true
+echo 'liveuser:edutecnico' | chpasswd 2>/dev/null || true
 
-# ── Auto-login sem senha no GNOME ────────────────────────────
+# ── Auto-login sem senha no GNOME (Garante liveuser) ──────────
 mkdir -p /etc/gdm
 cat > /etc/gdm/custom.conf << 'GDMEOF'
 [daemon]
 AutomaticLoginEnable=True
-AutomaticLogin=tecnico
+AutomaticLogin=liveuser
 GDMEOF
 
-# ── Cria estrutura de pastas ──────────────────────────────────
-mkdir -p /home/tecnico/Desktop
-mkdir -p /home/tecnico/Documentos
-mkdir -p /home/tecnico/.config/autostart
+# ── Cria estrutura de pastas para o liveuser ──────────────────
+mkdir -p /home/liveuser/Desktop
+mkdir -p /home/liveuser/Documentos
+mkdir -p /home/liveuser/.config/autostart
 
 # ── Tema escuro + Tela sem bloqueio ──────────────────────────
-cat > /home/tecnico/.config/autostart/setup.desktop << 'DTEOF'
+cat > /home/liveuser/.config/autostart/setup.desktop << 'DTEOF'
 [Desktop Entry]
 Type=Application
 Exec=bash -c "gsettings set org.gnome.desktop.interface color-scheme prefer-dark; gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'; gsettings set org.gnome.desktop.screensaver lock-enabled false; gsettings set org.gnome.desktop.session idle-delay 0; gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'; gsettings set org.gnome.desktop.background picture-uri 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.desktop.background picture-uri-dark 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.desktop.background picture-options 'zoom'; gsettings set org.gnome.desktop.screensaver picture-uri 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.shell favorite-apps \"['menu-tecnico.desktop', 'org.gnome.Nautilus.desktop', 'gparted.desktop', 'firefox.desktop']\""
@@ -162,20 +158,20 @@ Name=Setup Tecnico
 DTEOF
 
 # Autostart para o Menu Técnico
-cat > /home/tecnico/.config/autostart/abrir-menu.desktop << 'MENUSTARTEOF'
+cat > /home/liveuser/.config/autostart/abrir-menu.desktop << 'MENUSTARTEOF'
 [Desktop Entry]
 Type=Application
-Exec=bash /home/tecnico/Scripts/menu-tecnico.sh
+Exec=bash /home/liveuser/Scripts/menu-tecnico.sh
 Hidden=false
 X-GNOME-Autostart-enabled=true
 Name=Abrir Menu Tecnico
 MENUSTARTEOF
 
 # Autostart para Montagem Automática de Discos
-cat > /home/tecnico/.config/autostart/montar-discos.desktop << 'MONTEOF'
+cat > /home/liveuser/.config/autostart/montar-discos.desktop << 'MONTEOF'
 [Desktop Entry]
 Type=Application
-Exec=bash -c "gnome-terminal --title='🔍 Montagem Automática' -- bash -c 'sudo bash /home/tecnico/Scripts/montar-discos-automatico.sh; echo; read -p \"Pressione ENTER para fechar...\"'"
+Exec=bash -c "gnome-terminal --title='🔍 Montagem Automática' -- bash -c 'sudo bash /home/liveuser/Scripts/montar-discos-automatico.sh; echo; read -p \"Pressione ENTER para fechar...\"'"
 Hidden=false
 X-GNOME-Autostart-enabled=true
 Name=Montar Discos Clientes
@@ -192,66 +188,66 @@ cat > /usr/share/applications/menu-tecnico.desktop << 'GLOBALMENUEOF'
 Type=Application
 Name=Menu Técnico EduTech
 Comment=Painel de ferramentas de reparo
-Exec=bash /home/tecnico/Scripts/menu-tecnico.sh
+Exec=bash /home/liveuser/Scripts/menu-tecnico.sh
 Terminal=false
 Icon=utilities-system-monitor
 Categories=System;Utility;
 GLOBALMENUEOF
 
 # ── Atalho na área de trabalho: Menu do Técnico ──────────────
-cat > /home/tecnico/Desktop/Menu-Tecnico.desktop << 'MENUEOF'
+cat > /home/liveuser/Desktop/Menu-Tecnico.desktop << 'MENUEOF'
 [Desktop Entry]
 Type=Application
 Name=Menu Técnico EduTech
 Comment=Abrir menu de ferramentas do técnico
-Exec=bash /home/tecnico/Scripts/menu-tecnico.sh
+Exec=bash /home/liveuser/Scripts/menu-tecnico.sh
 Terminal=false
 Icon=utilities-system-monitor
 X-GNOME-Autostart-enabled=true
 MENUEOF
 
 # ── Atalho: Diagnóstico de Discos ────────────────────────────
-cat > /home/tecnico/Desktop/Diagnostico-Discos.desktop << 'DIAGEOF'
+cat > /home/liveuser/Desktop/Diagnostico-Discos.desktop << 'DIAGEOF'
 [Desktop Entry]
 Type=Application
 Name=Diagnóstico de Discos
-Exec=bash -c "bash /home/tecnico/Scripts/diagnostico-discos.sh; read -p 'Pressione ENTER para sair...'"
+Exec=bash -c "bash /home/liveuser/Scripts/diagnostico-discos.sh; read -p 'Pressione ENTER para sair...'"
 Terminal=true
 Icon=drive-harddisk
 DIAGEOF
 
 # ── Atalho: Scanner de Vírus ──────────────────────────────────
-cat > /home/tecnico/Desktop/Scanner-Virus.desktop << 'VIRUSEOF'
+cat > /home/liveuser/Desktop/Scanner-Virus.desktop << 'VIRUSEOF'
 [Desktop Entry]
 Type=Application
 Name=Scanner de Vírus Offline
-Exec=bash -c "bash /home/tecnico/Scripts/scanner-virus-offline.sh; read -p 'Pressione ENTER para sair...'"
+Exec=bash -c "bash /home/liveuser/Scripts/scanner-virus-offline.sh; read -p 'Pressione ENTER para sair...'"
 Terminal=true
 Icon=security-high
 VIRUSEOF
 
 # ── Atalho: Backup de Perfil ──────────────────────────────────
-cat > /home/tecnico/Desktop/Backup-Perfil.desktop << 'BACKUPEOF'
+cat > /home/liveuser/Desktop/Backup-Perfil.desktop << 'BACKUPEOF'
 [Desktop Entry]
 Type=Application
 Name=Backup de Perfil do Usuário
-Exec=bash -c "bash /home/tecnico/Scripts/backup-perfil-automatico.sh; read -p 'Pressione ENTER para sair...'"
+Exec=bash -c "bash /home/liveuser/Scripts/backup-perfil-automatico.sh; read -p 'Pressione ENTER para sair...'"
 Terminal=true
 Icon=document-save
 BACKUPEOF
 
 # ── Atalho: Resetar Senha ─────────────────────────────────────
-cat > /home/tecnico/Desktop/Resetar-Senha.desktop << 'SENHAEOF'
+cat > /home/liveuser/Desktop/Resetar-Senha.desktop << 'SENHAEOF'
 [Desktop Entry]
 Type=Application
 Name=Resetar Senha Windows
-Exec=bash -c "bash /home/tecnico/Scripts/resetar-senha-automatico.sh; read -p 'Pressione ENTER para sair...'"
+Exec=bash -c "bash /home/liveuser/Scripts/resetar-senha-automatico.sh; read -p 'Pressione ENTER para sair...'"
 Terminal=true
 Icon=dialog-password
 SENHAEOF
 
 # ── Atalho: GParted ───────────────────────────────────────────
-cat > /home/tecnico/Desktop/GParted.desktop << 'GPARTED'
+cat > /home/liveuser/Desktop/GParted.desktop << 'GPARTED'
 [Desktop Entry]
 Type=Application
 Name=GParted - Partições
@@ -260,36 +256,36 @@ Icon=gparted
 GPARTED
 
 # ── Permissões dos atalhos ────────────────────────────────────
-chmod +x /home/tecnico/Desktop/*.desktop
+chmod +x /home/liveuser/Desktop/*.desktop
 
 # ── Créditos no sistema ───────────────────────────────────────
 cat > /etc/issue << 'ISSUEEOF'
 EduTechAnderlineNet - ISO Técnico FULLZÃO
-Usuário: tecnico | Senha: edutecnico
+Usuário: liveuser | Senha: edutecnico
 ISSUEEOF
 
 # ── Permissões Especiais: Sudo Sem Senha ─────────────────────
-echo "tecnico ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/tecnico
-chmod 0440 /etc/sudoers.d/tecnico
+echo "liveuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/liveuser
+chmod 0440 /etc/sudoers.d/liveuser
 
 # ── Permissões Especiais: Polkit Sem Senha para GParted ──────
 mkdir -p /etc/polkit-1/rules.d
-cat > /etc/polkit-1/rules.d/49-nopasswd-tecnico.rules << 'POLKITEOF'
+cat > /etc/polkit-1/rules.d/49-nopasswd-liveuser.rules << 'POLKITEOF'
 polkit.addRule(function(action, subject) {
     if (subject.isInGroup("wheel")) {
         return polkit.Result.YES;
     }
 });
 POLKITEOF
-chmod 0644 /etc/polkit-1/rules.d/49-nopasswd-tecnico.rules
-chown root:root /etc/polkit-1/rules.d/49-nopasswd-tecnico.rules
+chmod 0644 /etc/polkit-1/rules.d/49-nopasswd-liveuser.rules
+chown root:root /etc/polkit-1/rules.d/49-nopasswd-liveuser.rules
 
 
 cat > /etc/motd << 'MOTDEOF'
 ============================================
  🔧 EduTechAnderlineNet - ISO Técnico FULL
 ============================================
- Usuário: tecnico    Senha: edutecnico
+ Usuário: liveuser   Senha: edutecnico
  Root:    root       Senha: edutecnico
 
  Ferramentas na Área de Trabalho:
@@ -302,21 +298,21 @@ cat > /etc/motd << 'MOTDEOF'
 ============================================
 MOTDEOF
 
-chown -R tecnico:tecnico /home/tecnico
+chown -R liveuser:liveuser /home/liveuser
 %end
 
 %post --nochroot
 # ── Copiar todos os scripts para a ISO ───────────────────────
-mkdir -p $INSTALL_ROOT/home/tecnico/Scripts
-cp /build/scripts/*.sh $INSTALL_ROOT/home/tecnico/Scripts/ 2>/dev/null || true
-cp /build/scripts/*.ps1 $INSTALL_ROOT/home/tecnico/Scripts/ 2>/dev/null || true
-cp /build/scripts/*.cmd $INSTALL_ROOT/home/tecnico/Scripts/ 2>/dev/null || true
-chmod -R +x $INSTALL_ROOT/home/tecnico/Scripts/
-chroot $INSTALL_ROOT chown -R tecnico:tecnico /home/tecnico/Scripts 2>/dev/null || true
+mkdir -p $INSTALL_ROOT/home/liveuser/Scripts
+cp /build/scripts/*.sh $INSTALL_ROOT/home/liveuser/Scripts/ 2>/dev/null || true
+cp /build/scripts/*.ps1 $INSTALL_ROOT/home/liveuser/Scripts/ 2>/dev/null || true
+cp /build/scripts/*.cmd $INSTALL_ROOT/home/liveuser/Scripts/ 2>/dev/null || true
+chmod -R +x $INSTALL_ROOT/home/liveuser/Scripts/
+chroot $INSTALL_ROOT chown -R liveuser:liveuser /home/liveuser/Scripts 2>/dev/null || true
 
 # ── Copiar arquivo de explicação de ferramentas para o Desktop ──────
-cp /build/Explica-Ferramentas.txt $INSTALL_ROOT/home/tecnico/Desktop/ 2>/dev/null || true
-chroot $INSTALL_ROOT chown tecnico:tecnico /home/tecnico/Desktop/Explica-Ferramentas.txt 2>/dev/null || true
+cp /build/Explica-Ferramentas.txt $INSTALL_ROOT/home/liveuser/Desktop/ 2>/dev/null || true
+chroot $INSTALL_ROOT chown liveuser:liveuser /home/liveuser/Desktop/Explica-Ferramentas.txt 2>/dev/null || true
 
 # ── Copiar wallpapers para dentro da ISO ─────────────────────
 mkdir -p $INSTALL_ROOT/usr/share/wallpapers/edutecnico
