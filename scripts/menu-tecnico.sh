@@ -1,9 +1,10 @@
 #!/bin/bash
 # ============================================================
 # Menu Técnico Gráfico (Zenity) - EduTechAnderlineNet
+# ISO Louca — Debian Live / LXQt Dark
 # ============================================================
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="${SCRIPT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 
 show_menu() {
     local choice
@@ -19,7 +20,7 @@ show_menu() {
         "💽" "Saúde do Disco (SMART)" "Verificar integridade física e erros do HD/SSD" \
         "ℹ️" "Info do Hardware" "Mostrar detalhes técnicos da máquina (Processador, RAM, etc)" \
         "🗃️" "GParted (Partições)" "Abrir o editor de partições de disco" \
-        "📁" "Nautilus (Arquivos)" "Abrir o gerenciador de arquivos como root" \
+        "📁" "Arquivos (PCManFM)" "Abrir o gerenciador de arquivos como root" \
         "💻" "Abrir Terminal" "Abrir terminal do sistema técnico" \
         --ok-label="Executar" --cancel-label="Sair")
 
@@ -29,31 +30,31 @@ show_menu() {
 
     case "$choice" in
         "Resetar Senha")
-            gnome-terminal --title="🔑 Resetar Senha Windows" -- bash -c "sudo bash '$SCRIPT_DIR/resetar-senha-automatico.sh'; echo -e '\nPressione ENTER para fechar...'; read"
+            qterminal --title "🔑 Resetar Senha Windows" -e bash -c "sudo bash '$SCRIPT_DIR/resetar-senha-automatico.sh'; echo -e '\nPressione ENTER para fechar...'; read"
             ;;
         "Scanner de Vírus")
-            gnome-terminal --title="🛡️ Scanner de Vírus ClamAV" -- bash -c "sudo bash '$SCRIPT_DIR/scanner-virus-offline.sh'; echo -e '\nPressione ENTER para fechar...'; read"
+            qterminal --title "🛡️ Scanner de Vírus ClamAV" -e bash -c "sudo bash '$SCRIPT_DIR/scanner-virus-offline.sh'; echo -e '\nPressione ENTER para fechar...'; read"
             ;;
         "Backup de Perfil")
-            gnome-terminal --title="💾 Backup de Perfil Windows" -- bash -c "sudo bash '$SCRIPT_DIR/backup-perfil-automatico.sh'; echo -e '\nPressione ENTER para fechar...'; read"
+            qterminal --title "💾 Backup de Perfil Windows" -e bash -c "sudo bash '$SCRIPT_DIR/backup-perfil-automatico.sh'; echo -e '\nPressione ENTER para fechar...'; read"
             ;;
         "Conectar à Rede (SMB)")
             bash "$SCRIPT_DIR/conectar-rede.sh"
             ;;
         "Saúde do Disco (SMART)")
-            gnome-terminal --title="💽 Saúde do Disco (SMART)" -- bash -c "sudo bash '$SCRIPT_DIR/diagnostico-discos.sh'; echo -e '\nPressione ENTER para fechar...'; read"
+            qterminal --title "💽 Saúde do Disco (SMART)" -e bash -c "sudo bash '$SCRIPT_DIR/diagnostico-discos.sh'; echo -e '\nPressione ENTER para fechar...'; read"
             ;;
         "Info do Hardware")
-            gnome-terminal --title="ℹ️ Informações de Hardware" -- bash -c "echo -e '--- Informações de Hardware ---\n'; inxi -F 2>/dev/null || sudo lshw -short; echo -e '\nPressione ENTER para fechar...'; read"
+            qterminal --title "ℹ️ Informações de Hardware" -e bash -c "echo -e '--- Informações de Hardware ---\n'; inxi -F 2>/dev/null || sudo lshw -short; echo -e '\nPressione ENTER para fechar...'; read"
             ;;
         "GParted (Partições)")
             sudo gparted &
             ;;
-        "Nautilus (Arquivos)")
-            sudo nautilus &
+        "Arquivos (PCManFM)")
+            sudo pcmanfm-qt &
             ;;
         "Abrir Terminal")
-            gnome-terminal &
+            qterminal &
             ;;
     esac
 }

@@ -1,0 +1,120 @@
+#!/bin/bash
+# ================================================================
+# Hook 0200: Aplicação do tema dark LXQt + wallpaper + atalhos
+# Executado dentro do chroot durante o build da ISO
+# ================================================================
+set -e
+
+echo "[HOOK] Aplicando tema dark LXQt..."
+
+# --- Configuração do LXQt (tema Breeze Dark) ---
+mkdir -p /etc/skel/.config/lxqt
+
+cat > /etc/skel/.config/lxqt/lxqt.conf << 'EOF'
+[General]
+theme=Breeze-dark
+iconTheme=Papirus-Dark
+font="Noto Sans,10,-1,5,50,0,0,0,0,0"
+fixedFont="Hack,10,-1,5,50,0,0,0,0,0"
+
+[MouseSettings]
+cursorTheme=breeze_cursors
+EOF
+
+# --- Configuração da sessão LXQt ---
+cat > /etc/skel/.config/lxqt/session.conf << 'EOF'
+[General]
+__userfile__=true
+window_manager=openbox
+EOF
+
+# --- Configuração do PCManFM-Qt (dark) ---
+mkdir -p /etc/skel/.config/pcmanfm-qt/default
+cat > /etc/skel/.config/pcmanfm-qt/default/settings.conf << 'EOF'
+[Behavior]
+NoUsbTrash=false
+
+[Desktop]
+Wallpaper=/usr/share/backgrounds/tecnico-wallpaper.png
+WallpaperMode=stretch
+BgColor=#1a1a2e
+TextColor=#e0e0e0
+ShadowColor=#000000
+ShowWmMenu=false
+
+[System]
+FallbackIconThemeName=Papirus-Dark
+EOF
+
+# --- Configuração do qterminal (dark) ---
+mkdir -p /etc/skel/.config/qterminal.org
+cat > /etc/skel/.config/qterminal.org/qterminal.ini << 'EOF'
+[General]
+ApplicationTransparency=0
+colorScheme=Monokai
+font=Monospace,11,-1,5,50,0,0,0,0,0
+guiStyle=Breeze
+historyLimited=true
+historyLimitedTo=1000
+menuVisible=true
+scrollbarPosition=2
+titleBehavior=3
+titleFormat=%d : %w
+EOF
+
+# --- Tema Qt via qt5ct ---
+mkdir -p /etc/skel/.config/qt5ct
+cat > /etc/skel/.config/qt5ct/qt5ct.conf << 'EOF'
+[Appearance]
+color_scheme_path=/usr/share/qt5ct/colors/darker.conf
+custom_palette=false
+icon_theme=Papirus-Dark
+standard_dialogs=default
+style=Breeze
+
+[Fonts]
+fixed=@Variant(\0\0\0@\0\0\0\x1a\0H\0\x61\0\x63\0k\0 \0\x44\0\x65\0\x62\0\x69\0\x61\0n\0 \0M\0o\0n\0o\0\0\0\x11\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0)
+general=@Variant(\0\0\0@\0\0\0\x18\0N\0o\0t\0o\0 \0S\0\x61\0n\0s\0 \x31\0\0\0\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0)
+
+[Interface]
+activate_item_on_single_click=1
+buttonbox_layout=0
+cursor_flash_time=1000
+dialog_buttons_have_icons=1
+double_click_interval=400
+gui_effects=@Invalid()
+keyboard_scheme=2
+menus_have_icons=true
+show_shortcuts_in_context_menus=true
+stylesheets=@Invalid()
+toolbutton_style=4
+underline_shortcut=1
+wheel_scroll_lines=3
+EOF
+
+# --- Variável de ambiente para Qt usar o tema dark ---
+cat > /etc/environment << 'EOF'
+QT_QPA_PLATFORMTHEME=qt5ct
+GTK_THEME=Breeze-Dark
+XCURSOR_THEME=breeze_cursors
+EOF
+
+# --- Atalho do Menu Técnico na área de trabalho ---
+mkdir -p /etc/skel/Desktop
+cat > /etc/skel/Desktop/menu-tecnico.desktop << 'EOF'
+[Desktop Entry]
+Name=🔧 Menu Técnico
+Comment=Ferramentas de manutenção EduTechAnderlineNet
+Exec=/usr/local/bin/menu-tecnico.sh
+Icon=system-run
+Terminal=false
+Type=Application
+Categories=System;
+EOF
+chmod +x /etc/skel/Desktop/menu-tecnico.desktop
+
+# --- Copiar skel para o usuário jardson ---
+cp -r /etc/skel/. /home/jardson/
+chown -R jardson:jardson /home/jardson/
+
+echo "[HOOK] Tema dark LXQt aplicado com sucesso!"

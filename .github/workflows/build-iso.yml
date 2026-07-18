@@ -1,4 +1,5 @@
-name: Build Fedora LiveCD ISO
+name: Build ISO Louca (Debian Live / LXQt Dark)
+
 on:
   push:
     branches: [ "main", "master" ]
@@ -6,17 +7,79 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+
     steps:
-      - name: Checkout code
+      - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Build ISO with Docker
+      - name: Instalar live-build
         run: |
-          docker run --privileged --rm -v ${{ github.workspace }}:/build fedora:38 bash -c "mount --make-rprivate / && sed -i '/exclude/d' /etc/dnf/dnf.conf && sed -i '/exclude/d' /etc/yum.repos.d/*.repo && dnf install -y livecd-tools util-linux && echo 'install_weak_deps=False' >> /etc/dnf/dnf.conf && echo '%_install_langs C' > /etc/rpm/macros.langs && sed -i 's/raise MountError(umount_fail_fmt.*/pass/g' /usr/lib/python3.*/site-packages/imgcreate/fs.py && cd /build && sed -i 's/\r$//' fedora-live-tecnico.ks && sed -i 's/\r$//' scripts/*.sh && livecd-creator --verbose --config=fedora-live-tecnico.ks --fslabel=ISO_LOUCA_BOOT"
+          sudo apt-get update -qq
+          sudo apt-get install -y live-build debootstrap
 
-      - name: Upload ISO Artifact
+      - name: Inicializar configuração do live-build
+        run: |
+          mkdir -p build
+          cd build
+          lb config \
+            --distribution bookworm \
+            --architecture amd64 \
+            --binary-images iso-hybrid \
+            --bootloaders grub-efi,syslinux \
+            --debian-installer none \
+            --chroot-filesystem squashfs \
+            --compression xz \
+            --updates true \
+            --security true \
+            --apt-recommends false \
+            --iso-volume "ISO-LOUCA" \
+            --image-name "iso-louca-lxqt"
+
+      - name: Copiar configurações do live-build
+        run: |
+          # Copiar listas de pacotes
+          cp -r config/package-lists build/config/
+
+          # Copiar hooks
+          cp -r config/hooks build/config/
+
+          # Copiar arquivos includes (lightdm.conf, skel, etc.)
+          cp -r config/includes.chroot build/config/
+
+          # Copiar wallpaper para dentro do chroot
+          mkdir -p build/config/includes.chroot/usr/share/backgrounds
+          cp "Wallpapers/wallpaper4_1440x900.png" \
+             build/config/includes.chroot/usr/share/backgrounds/tecnico-wallpaper.png
+
+          # Copiar scripts técnicos para dentro do chroot
+          mkdir -p build/config/includes.chroot/scripts
+          cp scripts/*.sh build/config/includes.chroot/scripts/
+
+          # Garantir permissões de execução nos hooks
+          chmod +x build/config/hooks/live/*.hook.chroot
+
+      - name: Build da ISO
+        run: |
+          cd build
+          sudo lb build 2>&1 | tee build.log
+
+      - name: Verificar ISO gerada
+        run: |
+          ls -lh build/*.iso || (echo "ERRO: ISO não foi gerada!" && cat build/build.log | tail -50 && exit 1)
+
+      - name: Upload da ISO como artefato
         uses: actions/upload-artifact@v4
         with:
-          name: ISO-LOUCA-BOOT
-          path: ISO_LOUCA_BOOT.iso
+          name: ISO-LOUCA-LXQt-Dark
+          path: build/iso-louca-lxqt-amd64.hybrid.iso
+          retention-days: 7
+
+      - name: Upload do log de build (se falhar)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build/build.log
+          retention-days: 3

@@ -1,0 +1,83 @@
+# ================================================================
+# ISO Louca Técnica — Lista de Pacotes (Debian Live / LXQt Dark)
+# ================================================================
+
+# --- Desktop LXQt ---
+lxqt
+lxqt-core
+openbox
+lightdm
+lightdm-gtk-greeter
+
+# --- Tema Dark ---
+breeze-gtk-theme
+breeze-cursor-theme
+papirus-icon-theme
+qt5ct
+kvantum
+kvantum-theme-default
+
+# --- Terminal e Shell ---
+qterminal
+bash
+bash-completion
+vim
+
+# --- Gerenciador de Arquivos ---
+pcmanfm-qt
+gvfs
+gvfs-backends
+
+# --- Interface Gráfica para Scripts ---
+zenity
+yad
+
+# --- Ferramentas de Disco e Partições ---
+gparted
+testdisk
+smartmontools
+hdparm
+parted
+dosfstools
+ntfs-3g
+exfatprogs
+
+# --- Rede e Diagnóstico ---
+nmap
+net-tools
+curl
+wget
+dnsutils
+iputils-ping
+iproute2
+wireless-tools
+wpasupplicant
+network-manager
+network-manager-gnome
+
+# --- Hardware e Info do Sistema ---
+inxi
+lshw
+dmidecode
+hwinfo
+usbutils
+pciutils
+htop
+
+# --- Segurança / Antivírus Offline ---
+clamav
+clamav-daemon
+
+# --- Suporte a Sistemas de Arquivos ---
+btrfs-progs
+e2fsprogs
+xfsprogs
+
+# --- Suporte Geral ---
+sudo
+less
+file
+rsync
+openssh-client
+samba-common-bin
+cifs-utils

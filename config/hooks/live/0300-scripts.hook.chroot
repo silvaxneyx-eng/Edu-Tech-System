@@ -1,0 +1,25 @@
+#!/bin/bash
+# ================================================================
+# Hook 0300: Copia os scripts técnicos e configura o launcher
+# ================================================================
+set -e
+
+echo "[HOOK] Instalando scripts técnicos..."
+
+# Criar diretório dos scripts no sistema
+mkdir -p /usr/local/lib/iso-louca
+
+# Copiar todos os scripts técnicos
+cp /scripts/*.sh /usr/local/lib/iso-louca/ 2>/dev/null || true
+chmod +x /usr/local/lib/iso-louca/*.sh
+
+# Criar launcher principal que chama o menu com o caminho correto
+cat > /usr/local/bin/menu-tecnico.sh << 'LAUNCHER'
+#!/bin/bash
+SCRIPT_DIR="/usr/local/lib/iso-louca"
+export SCRIPT_DIR
+exec bash "$SCRIPT_DIR/menu-tecnico.sh"
+LAUNCHER
+chmod +x /usr/local/bin/menu-tecnico.sh
+
+echo "[HOOK] Scripts técnicos instalados em /usr/local/lib/iso-louca/"
