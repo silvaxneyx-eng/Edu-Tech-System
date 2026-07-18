@@ -1,5 +1,7 @@
-# Kickstart para ISO Técnico FULL - EduTechAnderlineNet
-# Créditos: EduTechAnderlineNet
+# ============================================================
+# Kickstart ISO Técnico FULLZÃO - EduTechAnderlineNet
+# Versão completa com GNOME, todas as ferramentas e scripts
+# ============================================================
 
 lang pt_BR.UTF-8
 keyboard br
@@ -20,7 +22,7 @@ repo --name=fedora --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?rep
 repo --name=updates --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f40&arch=$basearch
 
 %packages
-# Boot e Kernel Essenciais (OBRIGATÓRIO PARA BOOT EFI/BIOS)
+# ── Boot e Kernel (OBRIGATÓRIO) ──────────────────────────────
 kernel
 kernel-modules
 kernel-modules-extra
@@ -34,36 +36,57 @@ shim-x64
 dracut-live
 efibootmgr
 
-# Base gráfica mínima
+# ── Interface Gráfica (GNOME) ─────────────────────────────────
 @base-x
 gnome-shell
 gnome-terminal
+gnome-control-center
+gnome-system-monitor
+gnome-disk-utility
 nautilus
 gdm
+polkit
 NetworkManager
 NetworkManager-wifi
+nm-connection-editor
 
-# Navegador e Windows Compat
+# ── Navegador ────────────────────────────────────────────────
 firefox
+
+# ── Compatibilidade com Windows (.exe) ───────────────────────
 wine-core
 wine-common
+wine-desktop
 
-# Utilitários essenciais de técnico
+# ── Gerenciamento de Partições e Discos ──────────────────────
 gparted
 testdisk
 ntfs-3g
-util-linux
-tar
-unzip
+dosfstools
+e2fsprogs
+btrfs-progs
+xfsprogs
+parted
+
+# ── Recuperação de Dados ──────────────────────────────────────
+ddrescue
+partclone
+photorec
+
+# ── Rede e Conectividade ──────────────────────────────────────
+nmap
+iperf3
+cifs-utils
+samba-client
+openssh-clients
+wireshark-cli
+traceroute
+net-tools
+bind-utils
 wget
 curl
-rsync
-htop
-mc
-nano
-vim-minimal
 
-# Diagnóstico de hardware
+# ── Diagnóstico de Hardware ───────────────────────────────────
 smartmontools
 lm_sensors
 hdparm
@@ -72,41 +95,60 @@ lshw
 inxi
 iotop
 nvme-cli
+memtest86+
+stress-ng
+pciutils
+usbutils
+cpu-x
 
-# Rede
-nmap
-iperf3
-cifs-utils
-samba-client
-
-# Recuperação de dados
-ddrescue
-partclone
-
-# Antivírus offline
+# ── Antivírus Offline ─────────────────────────────────────────
 clamav
 clamav-update
+clamtk
 
-# Extras
+# ── Ferramentas de Sistema ────────────────────────────────────
+util-linux
+tar
+unzip
+zip
+p7zip
+p7zip-plugins
+wget
+rsync
+htop
+mc
+nano
+vim-minimal
 screen
 pv
+tree
+ncdu
+tmux
+bash-completion
 
-# Excluir pacotes problemáticos
+# ── Utilitários de Arquivo ────────────────────────────────────
+file-roller
+
+# ── Editor de Texto Gráfico ───────────────────────────────────
+gedit
+
+# ── Suporte a PowerShell (para rodar scripts .ps1) ────────────
+powershell
+
+# ── Excluir pacotes problemáticos ─────────────────────────────
 -*langpacks*
 -langpacks*
 -geolite2*
 %end
 
 %post
-# Garante que o usuario tecnico existe e a senha está correta (dupla garantia)
+# ── Garante usuário e senha (dupla garantia) ──────────────────
 useradd -m -G wheel tecnico 2>/dev/null || true
-# Metodo 1: chpasswd (mais confiavel)
 echo 'tecnico:edutecnico' | chpasswd 2>/dev/null || true
 echo 'root:edutecnico' | chpasswd 2>/dev/null || true
-# Metodo 2: passwd (backup)
 echo 'edutecnico' | passwd --stdin tecnico 2>/dev/null || true
 
-# Configura autologin
+# ── Auto-login sem senha no GNOME ────────────────────────────
 mkdir -p /etc/gdm
 cat > /etc/gdm/custom.conf << 'GDMEOF'
 [daemon]
@@ -114,32 +156,120 @@ AutomaticLoginEnable=True
 AutomaticLogin=tecnico
 GDMEOF
 
-# Cria pasta Desktop
+# ── Cria estrutura de pastas ──────────────────────────────────
 mkdir -p /home/tecnico/Desktop
-
-# Tema escuro (melhor esforço)
+mkdir -p /home/tecnico/Documentos
 mkdir -p /home/tecnico/.config/autostart
+
+# ── Tema escuro + Tela sem bloqueio ──────────────────────────
 cat > /home/tecnico/.config/autostart/setup.desktop << 'DTEOF'
 [Desktop Entry]
 Type=Application
-Exec=bash -c "gsettings set org.gnome.desktop.interface color-scheme prefer-dark; gsettings set org.gnome.desktop.screensaver lock-enabled false; gsettings set org.gnome.desktop.session idle-delay 0"
+Exec=bash -c "gsettings set org.gnome.desktop.interface color-scheme prefer-dark; gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'; gsettings set org.gnome.desktop.screensaver lock-enabled false; gsettings set org.gnome.desktop.session idle-delay 0; gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'"
 Hidden=false
 X-GNOME-Autostart-enabled=true
-Name=Setup
+Name=Setup Tecnico
 DTEOF
 
-chown -R tecnico:tecnico /home/tecnico
+# ── Atalho na área de trabalho: Menu do Técnico ──────────────
+cat > /home/tecnico/Desktop/Menu-Tecnico.desktop << 'MENUEOF'
+[Desktop Entry]
+Type=Application
+Name=Menu Técnico EduTech
+Comment=Abrir menu de ferramentas do técnico
+Exec=bash -c "bash /home/tecnico/Scripts/menu-tecnico.sh; read -p 'Pressione ENTER para sair...'"
+Terminal=true
+Icon=utilities-system-monitor
+X-GNOME-Autostart-enabled=true
+MENUEOF
 
-# Créditos no sistema
-echo "EduTechAnderlineNet - ISO Técnico FULL" > /etc/issue
+# ── Atalho: Diagnóstico de Discos ────────────────────────────
+cat > /home/tecnico/Desktop/Diagnostico-Discos.desktop << 'DIAGEOF'
+[Desktop Entry]
+Type=Application
+Name=Diagnóstico de Discos
+Exec=bash -c "bash /home/tecnico/Scripts/diagnostico-discos.sh; read -p 'Pressione ENTER para sair...'"
+Terminal=true
+Icon=drive-harddisk
+DIAGEOF
+
+# ── Atalho: Scanner de Vírus ──────────────────────────────────
+cat > /home/tecnico/Desktop/Scanner-Virus.desktop << 'VIRUSEOF'
+[Desktop Entry]
+Type=Application
+Name=Scanner de Vírus Offline
+Exec=bash -c "bash /home/tecnico/Scripts/scanner-virus-offline.sh; read -p 'Pressione ENTER para sair...'"
+Terminal=true
+Icon=security-high
+VIRUSEOF
+
+# ── Atalho: Backup de Perfil ──────────────────────────────────
+cat > /home/tecnico/Desktop/Backup-Perfil.desktop << 'BACKUPEOF'
+[Desktop Entry]
+Type=Application
+Name=Backup de Perfil do Usuário
+Exec=bash -c "bash /home/tecnico/Scripts/backup-perfil-automatico.sh; read -p 'Pressione ENTER para sair...'"
+Terminal=true
+Icon=document-save
+BACKUPEOF
+
+# ── Atalho: Resetar Senha ─────────────────────────────────────
+cat > /home/tecnico/Desktop/Resetar-Senha.desktop << 'SENHAEOF'
+[Desktop Entry]
+Type=Application
+Name=Resetar Senha Windows
+Exec=bash -c "bash /home/tecnico/Scripts/resetar-senha-automatico.sh; read -p 'Pressione ENTER para sair...'"
+Terminal=true
+Icon=dialog-password
+SENHAEOF
+
+# ── Atalho: GParted ───────────────────────────────────────────
+cat > /home/tecnico/Desktop/GParted.desktop << 'GPARTED'
+[Desktop Entry]
+Type=Application
+Name=GParted - Partições
+Exec=pkexec gparted
+Icon=gparted
+GPARTED
+
+# ── Permissões dos atalhos ────────────────────────────────────
+chmod +x /home/tecnico/Desktop/*.desktop
+
+# ── Créditos no sistema ───────────────────────────────────────
+cat > /etc/issue << 'ISSUEEOF'
+EduTechAnderlineNet - ISO Técnico FULLZÃO
+Usuário: tecnico | Senha: edutecnico
+ISSUEEOF
+
+cat > /etc/motd << 'MOTDEOF'
+============================================
+ 🔧 EduTechAnderlineNet - ISO Técnico FULL
+============================================
+ Usuário: tecnico    Senha: edutecnico
+ Root:    root       Senha: edutecnico
+
+ Ferramentas na Área de Trabalho:
+  - Menu do Técnico (todas as funções)
+  - Diagnóstico de Discos
+  - Scanner de Vírus Offline
+  - Backup de Perfil
+  - Resetar Senha Windows
+  - GParted
+============================================
+MOTDEOF
+
+chown -R tecnico:tecnico /home/tecnico
 %end
 
 %post --nochroot
-# Copiar os scripts da pasta do projeto local para a Área de Trabalho do técnico na ISO
-cp -r /build/scripts $INSTALL_ROOT/home/tecnico/Desktop/Meus_Scripts_de_Backup
-chroot $INSTALL_ROOT chown -R tecnico:tecnico /home/tecnico/Desktop/Meus_Scripts_de_Backup
-chroot $INSTALL_ROOT chmod -R +x /home/tecnico/Desktop/Meus_Scripts_de_Backup
+# ── Copiar todos os scripts para a ISO ───────────────────────
+mkdir -p $INSTALL_ROOT/home/tecnico/Scripts
+cp /build/scripts/*.sh $INSTALL_ROOT/home/tecnico/Scripts/ 2>/dev/null || true
+cp /build/scripts/*.ps1 $INSTALL_ROOT/home/tecnico/Scripts/ 2>/dev/null || true
+cp /build/scripts/*.cmd $INSTALL_ROOT/home/tecnico/Scripts/ 2>/dev/null || true
+chmod -R +x $INSTALL_ROOT/home/tecnico/Scripts/
+chroot $INSTALL_ROOT chown -R tecnico:tecnico /home/tecnico/Scripts
 
-# WORKAROUND: Forçar desmontagem preguiçosa do cache do DNF
+# ── WORKAROUND: Desmontagem forçada ──────────────────────────
 umount -l $INSTALL_ROOT/var/cache/dnf || true
 %end
