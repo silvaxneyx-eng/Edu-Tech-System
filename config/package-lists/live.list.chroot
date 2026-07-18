@@ -14,8 +14,10 @@ breeze-gtk-theme
 breeze-cursor-theme
 papirus-icon-theme
 qt5ct
-kvantum
-kvantum-theme-default
+qt5-style-kvantum
+qt5-style-kvantum-themes
+firmware-linux
+firmware-iwlwifi
 
 # --- Terminal e Shell ---
 qterminal
