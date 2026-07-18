@@ -67,7 +67,7 @@ xfsprogs
 parted
 
 # ── Recuperação de dados ──────────────────────────────────────
-gddrescue
+ddrescue
 
 # ── Rede e Conectividade ──────────────────────────────────────
 nmap
