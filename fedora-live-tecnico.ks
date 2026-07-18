@@ -124,9 +124,9 @@ file-roller
 # ── Editor de Texto Gráfico ───────────────────────────────────
 gedit
 
-# ── Excluir pacotes problemáticos ─────────────────────────────
--*langpacks*
--langpacks*
+# ── Excluir pacotes problemáticos (apenas os que causam erro no Docker) ───
+-gnome-all-langpacks
+-langpacks-*
 -geolite2*
 %end
 
