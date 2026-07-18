@@ -11,6 +11,10 @@ zerombr
 clearpart --all
 part / --size 8192 --fstype ext4
 
+# Senha padrão: edutecnico
+rootpw --plaintext edutecnico
+user --name=tecnico --groups=wheel --password=edutecnico --gecos="Tecnico EduTech"
+
 # Repositórios Oficiais do Fedora 40
 repo --name=fedora --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-40&arch=$basearch
 repo --name=updates --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f40&arch=$basearch
@@ -94,9 +98,13 @@ pv
 %end
 
 %post
-# Cria o usuário tecnico
-useradd -m -G wheel tecnico
-echo "tecnico" | passwd --stdin tecnico 2>/dev/null || true
+# Garante que o usuario tecnico existe e a senha está correta (dupla garantia)
+useradd -m -G wheel tecnico 2>/dev/null || true
+# Metodo 1: chpasswd (mais confiavel)
+echo 'tecnico:edutecnico' | chpasswd 2>/dev/null || true
+echo 'root:edutecnico' | chpasswd 2>/dev/null || true
+# Metodo 2: passwd (backup)
+echo 'edutecnico' | passwd --stdin tecnico 2>/dev/null || true
 
 # Configura autologin
 mkdir -p /etc/gdm
