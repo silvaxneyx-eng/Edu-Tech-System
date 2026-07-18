@@ -1,0 +1,20 @@
+# Arquivos de mídia e ISOs muito grandes
+ISOs/**/*.zip
+ISOs/**/*.iso
+ISOs/**/*.img
+
+# Ferramentas compiladas e baixadas (podem ser restauradas pelo script Baixar.ps1)
+Tools/*/
+!Tools/README.md
+
+# Drivers baixados e pacotes
+Drivers/*/
+!Drivers/README.md
+
+# Logs e arquivos gerados localmente no uso
+*.log
+*.tmp
+scripts/Sistema-*.txt
+scripts/WiFi-Perfis-*.txt
+scripts/Backup-Perfil-*
+MS Office setup/ActiveShareDir/

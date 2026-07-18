@@ -1,0 +1,13 @@
+<!-- EXEMPLO — gere o seu em https://config.office.com/deploymentsettings -->
+<!-- Product: Office LTSC Professional Plus 2024 - Volume license -->
+<!-- Language: Match operating system | Architecture: 64-bit -->
+
+<Configuration>
+  <Add OfficeClientEdition="64" Channel="PerpetualVL2024">
+    <Product ID="ProPlus2024Volume">
+      <Language ID="MatchOS" />
+    </Product>
+  </Add>
+  <!-- Sem PIDKEY = instala sem ativar; cliente informa a chave depois -->
+  <Display Level="Full" AcceptEULA="TRUE" />
+</Configuration>

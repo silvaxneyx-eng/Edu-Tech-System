@@ -1,0 +1,190 @@
+{
+  "ferramentas": [
+    {
+      "nome": "7-Zip",
+      "pasta": "7-Zip",
+      "url": "https://www.7-zip.org/a/7z2409-x64.exe",
+      "arquivo": "7z-installer.exe",
+      "tipo": "installer",
+      "nota": "Instale ou extraia com /S; portable: 7z2409-extra.7z",
+      "sha256": "4b68e925b306b970b8fb7b824b22c7104b2a8d38805f41dc680327f12e12e9bd",
+      "versao": "24.09"
+    },
+    {
+      "nome": "Rufus",
+      "pasta": "Rufus",
+      "url": "https://github.com/pbatard/rufus/releases/download/v4.6/rufus-4.6.exe",
+      "arquivo": "rufus.exe",
+      "tipo": "portable",
+      "sha256": "81f1489066497fcc2c366ffdf3ee8818f9720b08ff287c80525ff743b67ee1c5",
+      "versao": "4.6"
+    },
+    {
+      "nome": "CPU-Z",
+      "pasta": "CPU-Z",
+      "url": "https://download.cpuid.com/cpu-z/cpu-z_2.13-en.zip",
+      "arquivo": "cpu-z.zip",
+      "tipo": "zip",
+      "sha256": "ee829377464019f2a2491a5666f7d0e49ecbc049f50f4a8616183ff1c87fdf3b",
+      "versao": "2.13"
+    },
+    {
+      "nome": "CrystalDiskInfo",
+      "pasta": "CrystalDiskInfo",
+      "url": "https://gigenet.dl.sourceforge.net/project/portableapps/CrystalDiskInfo%20Portable/CrystalDiskInfoPortable_9.5.2.paf.exe",
+      "arquivo": "CrystalDiskInfoPortable.exe",
+      "tipo": "installer",
+      "sha256": "",
+      "versao": "9.5.2"
+    },
+    {
+      "nome": "CrystalDiskMark",
+      "pasta": "CrystalDiskMark",
+      "url": "https://gigenet.dl.sourceforge.net/project/portableapps/CrystalDiskMark%20Portable/CrystalDiskMarkPortable_8.0.5.paf.exe",
+      "arquivo": "CrystalDiskMarkPortable.exe",
+      "tipo": "installer",
+      "sha256": "",
+      "versao": "8.0.5"
+    },
+    {
+      "nome": "HWiNFO",
+      "pasta": "HWiNFO",
+      "url": "https://www.hwinfo.com/files/hw64_800.zip",
+      "arquivo": "hwinfo.zip",
+      "tipo": "zip",
+      "sha256": "",
+      "versao": "8.00"
+    },
+    {
+      "nome": "LibreOffice Portable",
+      "pasta": "LibreOffice",
+      "url": "https://gigenet.dl.sourceforge.net/project/portableapps/LibreOffice%20Portable/LibreOfficePortable_24.8.2_MultilingualStandard.paf.exe",
+      "arquivo": "LibreOfficePortable.paf.exe",
+      "tipo": "installer",
+      "nota": "Alternativa gratuita ao Office",
+      "sha256": "",
+      "versao": "24.8.2"
+    },
+    {
+      "nome": "Snappy Driver Installer",
+      "pasta": "Drivers",
+      "url": "https://deac-ams.dl.sourceforge.net/project/snappy-driver-installer-origin/SDIO_1.18.0.zip",
+      "arquivo": "sdi.zip",
+      "tipo": "zip",
+      "sha256": "",
+      "versao": "1.18.0"
+    },
+    {
+      "nome": "Ventoy",
+      "pasta": "Ventoy",
+      "url": "https://github.com/ventoy/Ventoy/releases/download/v1.1.00/ventoy-1.1.00-windows.zip",
+      "arquivo": "ventoy.zip",
+      "tipo": "zip",
+      "nota": "Use Ventoy2Disk.exe para instalar no USB",
+      "sha256": "",
+      "versao": "1.1.00"
+    },
+    {
+      "nome": "GPU-Z",
+      "pasta": "GPU-Z",
+      "url": "https://us.download.nvidia.com/tech/gpuid/gpu-z/gpu-z_2.59.0.zip",
+      "arquivo": "gpu-z.zip",
+      "tipo": "zip",
+      "nota": "Se falhar, baixe em https://www.techpowerup.com/gpuz/",
+      "sha256": "",
+      "versao": "2.59.0"
+    },
+    {
+      "nome": "Everything",
+      "pasta": "Everything",
+      "url": "https://www.voidtools.com/Everything-1.4.1.1026.x64.zip",
+      "arquivo": "everything.zip",
+      "tipo": "zip",
+      "sha256": "",
+      "versao": "1.4.1"
+    },
+    {
+      "nome": "Process Explorer",
+      "pasta": "ProcessExplorer",
+      "url": "https://download.sysinternals.com/files/ProcessExplorer.zip",
+      "arquivo": "procexp.zip",
+      "tipo": "zip",
+      "sha256": "",
+      "versao": "Sysinternals"
+    },
+    {
+      "nome": "Autoruns",
+      "pasta": "Autoruns",
+      "url": "https://download.sysinternals.com/files/Autoruns.zip",
+      "arquivo": "autoruns.zip",
+      "tipo": "zip",
+      "sha256": "",
+      "versao": "Sysinternals"
+    },
+    {
+      "nome": "BlueScreenView",
+      "pasta": "BlueScreenView",
+      "url": "https://www.nirsoft.net/utils/bluescreenview-x64.zip",
+      "arquivo": "bluescreenview.zip",
+      "tipo": "zip",
+      "sha256": "",
+      "versao": "NirSoft"
+    },
+    {
+      "nome": "NTPWedit",
+      "pasta": "Tools/NTPWedit",
+      "url": "https://github.com/jmclaren7/ntpwedit/releases/download/v0.7a/ntpwed07.zip",
+      "arquivo": "ntpwedit.zip",
+      "tipo": "zip",
+      "nota": "Reset de senha Windows localmente",
+      "sha256": "",
+      "versao": "0.7a"
+    },
+    {
+      "nome": "WizTree",
+      "pasta": "WizTree",
+      "url": "https://www.diskanalyzer.com/files/wiztree_4_22_portable.zip",
+      "arquivo": "wiztree.zip",
+      "tipo": "zip",
+      "nota": "Análise rápida de espaço em disco",
+      "sha256": "",
+      "versao": "4.22"
+    },
+    {
+      "nome": "Victoria",
+      "pasta": "Victoria",
+      "url": "https://hdd.by/Victoria/Victoria537.zip",
+      "arquivo": "victoria.zip",
+      "tipo": "zip",
+      "nota": "Diagnóstico profissional de HDD/SSD",
+      "sha256": "",
+      "versao": "5.37"
+    },
+    {
+      "nome": "ADWCleaner",
+      "pasta": "ADWCleaner",
+      "url": "https://downloads.malwarebytes.com/file/adwcleaner",
+      "arquivo": "adwcleaner.exe",
+      "tipo": "portable",
+      "nota": "Remoção de adware e hijackers",
+      "sha256": "",
+      "versao": "Latest"
+    }
+  ],
+  "manual": [
+    {
+      "nome": "MemTest86+ Live ISO",
+      "pasta": "ISOs/Recovery",
+      "url": "https://github.com/memtest86plus/memtest86plus/releases/download/v7.00/mt86plus_7.00.iso.zip",
+      "arquivo": "memtest.zip",
+      "tipo": "zip",
+      "nota": "Teste de Memória RAM robusto bootável"
+    },
+    {
+      "nome": "Hiren's BootCD PE ISO",
+      "pasta": "ISOs/Recovery",
+      "url": "https://www.hirensbootcd.org/download/",
+      "nota": "Copie o .iso para ISOs\\Recovery\\"
+    }
+  ]
+}

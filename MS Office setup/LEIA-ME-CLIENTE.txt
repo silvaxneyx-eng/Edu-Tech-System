@@ -1,0 +1,25 @@
+═══════════════════════════════════════════════════════
+  MICROSOFT OFFICE — ATIVAÇÃO (para o cliente)
+═══════════════════════════════════════════════════════
+
+O Office foi instalado no seu computador.
+Para usar todos os recursos, você precisa de uma CHAVE
+de produto (comprada na Microsoft ou revenda autorizada).
+
+COMO ATIVAR (quando tiver a chave):
+
+  1. Abra qualquer app do Office (Word, Excel, etc.)
+  2. Arquivo → Conta → Atualizar produto / Ativar
+  3. Informe a chave de 25 caracteres (XXXXX-XXXXX-...)
+
+OU peça ao técnico para rodar:
+
+  .\05-Ativar-Com-Chave.ps1 -Chave "SUA-CHAVE-AQUI"
+
+═══════════════════════════════════════════════════════
+
+Enquanto não ativar, o Office pode funcionar com
+limitações (aviso na barra amarela, recursos reduzidos).
+
+Compre chaves apenas em fontes oficiais:
+  https://www.microsoft.com/microsoft-365

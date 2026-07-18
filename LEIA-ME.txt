@@ -1,0 +1,18 @@
+# Iso LOuca — Pendrive do Tecnico
+
+Conteudo deste pendrive:
+  ISOs\         Sistemas bootaveis (Windows, Linux, Recovery)
+  Tools\        Programas portateis
+  Drivers\      Snappy Driver Installer + pacotes OEM
+  Scripts\      Utilitarios de manutencao
+  MS Office setup\  Instalador Office (cliente ativa depois)
+
+Inicio rapido:
+  1. Boot: selecione uma ISO no menu Ventoy
+  2. No Windows: abra Scripts\Menu-Tecnico.ps1
+  3. Office: MS Office setup\scripts\04-Instalar-Office.ps1
+
+Links uteis:
+  Ventoy:     https://www.ventoy.net
+  Win11 ISO:  https://www.microsoft.com/software-download/windows11
+  Win10 ISO:  https://www.microsoft.com/software-download/windows10
