@@ -23,6 +23,11 @@ gnome-terminal
 nautilus
 gdm
 
+# Navegador e compatibilidade Windows
+firefox
+wine-core
+wine-common
+
 # Utilitários essenciais de técnico
 gparted
 testdisk
