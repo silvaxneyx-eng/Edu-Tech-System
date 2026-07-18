@@ -139,7 +139,7 @@ passwd -d jardson 2>/dev/null || true
 # Patch no livesys do Fedora Live para usar 'jardson' sem senha no boot
 if [ -f /usr/sbin/livesys ]; then
     sed -i 's/liveuser/jardson/g' /usr/sbin/livesys
-    sed -i '2i useradd -m -G wheel jardson 2>/dev/null || true\npasswd -d root\npasswd -d jardson' /usr/sbin/livesys
+    sed -i '2i useradd -m -G wheel jardson 2>/dev/null || true\nchown -R jardson:jardson /home/jardson 2>/dev/null || true\npasswd -d root\npasswd -d jardson' /usr/sbin/livesys
 fi
 
 # ── Auto-login sem senha no GNOME (Garante jardson) ──────────
@@ -269,7 +269,7 @@ chmod +x /home/jardson/Desktop/*.desktop
 # ── Créditos no sistema ───────────────────────────────────────
 cat > /etc/issue << 'ISSUEEOF'
 EduTechAnderlineNet - ISO Técnico FULLZÃO
-Usuário: jardson | Senha: 2412
+Usuário: jardson | Senha: (sem senha/em branco)
 ISSUEEOF
 
 # ── Permissões Especiais: Sudo Sem Senha ─────────────────────
@@ -293,16 +293,16 @@ cat > /etc/motd << 'MOTDEOF'
 ============================================
  🔧 EduTechAnderlineNet - ISO Técnico FULL
 ============================================
- Usuário: jardson    Senha: 2412
- Root:    root       Senha: 2412
+  Usuário: jardson    Senha: (sem senha/em branco)
+  Root:    root       Senha: (sem senha/em branco)
 
- Ferramentas na Área de Trabalho:
-  - Menu do Técnico (todas as funções)
-  - Diagnóstico de Discos
-  - Scanner de Vírus Offline
-  - Backup de Perfil
-  - Resetar Senha Windows
-  - GParted
+  Ferramentas na Área de Trabalho:
+   - Menu do Técnico (todas as funções)
+   - Diagnóstico de Discos
+   - Scanner de Vírus Offline
+   - Backup de Perfil
+   - Resetar Senha Windows
+   - GParted
 ============================================
 MOTDEOF
 

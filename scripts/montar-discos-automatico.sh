@@ -55,5 +55,5 @@ for part in $particoes; do
 done
 
 # Dá permissão ao usuário técnico para acessar a pasta de montagem
-chown -R tecnico:tecnico /mnt/clientes 2>/dev/null || true
+chown -R jardson:jardson /mnt/clientes 2>/dev/null || true
 echo "✨ Detecção e montagem finalizadas. Discos prontos em /mnt/clientes/"

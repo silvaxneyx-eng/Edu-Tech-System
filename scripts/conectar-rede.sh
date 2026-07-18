@@ -60,7 +60,7 @@ if [ $? -eq 0 ]; then
     zenity --info \
         --title="✓ Sucesso!" \
         --text="Pasta de rede montada com sucesso em:\n📂 /mnt/rede_local\n\nAbrindo o Nautilus..."
-    sudo chown -R tecnico:tecnico /mnt/rede_local 2>/dev/null || true
+    sudo chown -R jardson:jardson /mnt/rede_local 2>/dev/null || true
     nautilus /mnt/rede_local &
 else
     zenity --error \
