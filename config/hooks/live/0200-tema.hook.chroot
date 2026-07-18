@@ -113,8 +113,4 @@ Categories=System;
 EOF
 chmod +x /etc/skel/Desktop/menu-tecnico.desktop
 
-# --- Copiar skel para o usuário jardson ---
-cp -r /etc/skel/. /home/jardson/
-chown -R jardson:jardson /home/jardson/
-
 echo "[HOOK] Tema dark LXQt aplicado com sucesso!"

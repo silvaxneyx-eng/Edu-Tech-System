@@ -87,3 +87,10 @@ rsync
 openssh-client
 samba-common-bin
 cifs-utils
+
+# --- Base / Kernel / Boot ---
+linux-image-amd64
+live-boot
+live-config
+live-config-systemd
+systemd-sysv

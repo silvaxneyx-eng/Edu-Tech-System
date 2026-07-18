@@ -57,8 +57,9 @@ jobs:
                 --debian-installer none \
                 --chroot-filesystem squashfs \
                 --compression xz \
-                --apt-recommends false \
+                --apt-recommends true \
                 --archive-areas 'main contrib non-free non-free-firmware' \
+                --bootappend-live "boot=live components username=jardson" \
                 --iso-volume 'ISO-LOUCA' \
                 --mirror-bootstrap http://deb.debian.org/debian \
                 --mirror-chroot http://deb.debian.org/debian \
