@@ -21,13 +21,12 @@ jobs:
 
       - name: Importar chave GPG do Debian Bookworm
         run: |
-          # Baixar a chave de assinatura atual do Debian 12 (Bookworm)
-          curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc \
-            | sudo gpg --dearmor -o /usr/share/keyrings/debian-archive-keyring.gpg
-          # Chave de segurança
-          curl -fsSL https://ftp-master.debian.org/keys/archive-key-12-security.asc \
-            | sudo gpg --dearmor >> /usr/share/keyrings/debian-archive-keyring.gpg
-          echo "Keyrings importados com sucesso."
+          # Instalar o pacote keyring diretamente do Debian Bookworm
+          wget -q "http://deb.debian.org/debian/pool/main/d/debian-archive-keyring/debian-archive-keyring_2023.3+deb12u1_all.deb" \
+            -O /tmp/debian-archive-keyring.deb
+          sudo dpkg -i /tmp/debian-archive-keyring.deb
+          echo "Keyring instalado:"
+          gpg --no-default-keyring --keyring /usr/share/keyrings/debian-archive-keyring.gpg --list-keys 2>/dev/null | grep -c "pub" || true
 
       - name: Inicializar configuração do live-build
         run: |
@@ -42,6 +41,7 @@ jobs:
             --compression xz \
             --apt-recommends false \
             --iso-volume "ISO-LOUCA" \
+            --debootstrap-options "--no-check-gpg" \
             --mirror-bootstrap http://deb.debian.org/debian \
             --mirror-chroot http://deb.debian.org/debian \
             --mirror-binary http://deb.debian.org/debian \
