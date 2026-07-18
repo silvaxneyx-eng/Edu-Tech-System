@@ -13,7 +13,7 @@ jobs:
 
       - name: Build ISO with Docker
         run: |
-          docker run --privileged --rm -v ${{ github.workspace }}:/build fedora:latest bash -c "dnf install -y livecd-tools && cd /build && livecd-creator --verbose --config=fedora-live-tecnico.ks --fslabel=ISO_LOUCA_BOOT"
+          docker run --privileged --rm -v ${{ github.workspace }}:/build fedora:latest bash -c "dnf install -y livecd-tools && cd /build && livecd-creator --verbose --skip-broken --config=fedora-live-tecnico.ks --fslabel=ISO_LOUCA_BOOT"
 
       - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4

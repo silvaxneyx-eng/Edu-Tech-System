@@ -15,7 +15,7 @@ part / --size 8192 --fstype ext4
 repo --name=fedora --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-40&arch=$basearch
 repo --name=updates --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f40&arch=$basearch
 
-%packages --skip-broken
+%packages
 # Base gráfica mínima
 @base-x
 gnome-shell
