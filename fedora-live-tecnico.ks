@@ -154,11 +154,21 @@ mkdir -p /home/tecnico/.config/autostart
 cat > /home/tecnico/.config/autostart/setup.desktop << 'DTEOF'
 [Desktop Entry]
 Type=Application
-Exec=bash -c "gsettings set org.gnome.desktop.interface color-scheme prefer-dark; gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'; gsettings set org.gnome.desktop.screensaver lock-enabled false; gsettings set org.gnome.desktop.session idle-delay 0; gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'; gsettings set org.gnome.desktop.background picture-uri 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.desktop.background picture-uri-dark 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.desktop.background picture-options 'zoom'; gsettings set org.gnome.desktop.screensaver picture-uri 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'"
+Exec=bash -c "gsettings set org.gnome.desktop.interface color-scheme prefer-dark; gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'; gsettings set org.gnome.desktop.screensaver lock-enabled false; gsettings set org.gnome.desktop.session idle-delay 0; gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'; gsettings set org.gnome.desktop.background picture-uri 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.desktop.background picture-uri-dark 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.desktop.background picture-options 'zoom'; gsettings set org.gnome.desktop.screensaver picture-uri 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.shell favorite-apps \"['menu-tecnico.desktop', 'org.gnome.Nautilus.desktop', 'gparted.desktop', 'firefox.desktop']\""
 Hidden=false
 X-GNOME-Autostart-enabled=true
 Name=Setup Tecnico
 DTEOF
+
+# Autostart para o Menu Técnico
+cat > /home/tecnico/.config/autostart/abrir-menu.desktop << 'MENUSTARTEOF'
+[Desktop Entry]
+Type=Application
+Exec=bash /home/tecnico/Scripts/menu-tecnico.sh
+Hidden=false
+X-GNOME-Autostart-enabled=true
+Name=Abrir Menu Tecnico
+MENUSTARTEOF
 
 # Autostart para Montagem Automática de Discos
 cat > /home/tecnico/.config/autostart/montar-discos.desktop << 'MONTEOF'
@@ -174,14 +184,27 @@ MONTEOF
 mkdir -p /usr/share/wallpapers/edutecnico
 mkdir -p /usr/share/gnome-background-properties
 
+# ── Registrar Menu Técnico no sistema de aplicativos global ────
+mkdir -p /usr/share/applications
+cat > /usr/share/applications/menu-tecnico.desktop << 'GLOBALMENUEOF'
+[Desktop Entry]
+Type=Application
+Name=Menu Técnico EduTech
+Comment=Painel de ferramentas de reparo
+Exec=bash /home/tecnico/Scripts/menu-tecnico.sh
+Terminal=false
+Icon=utilities-system-monitor
+Categories=System;Utility;
+GLOBALMENUEOF
+
 # ── Atalho na área de trabalho: Menu do Técnico ──────────────
 cat > /home/tecnico/Desktop/Menu-Tecnico.desktop << 'MENUEOF'
 [Desktop Entry]
 Type=Application
 Name=Menu Técnico EduTech
 Comment=Abrir menu de ferramentas do técnico
-Exec=bash -c "bash /home/tecnico/Scripts/menu-tecnico.sh; read -p 'Pressione ENTER para sair...'"
-Terminal=true
+Exec=bash /home/tecnico/Scripts/menu-tecnico.sh
+Terminal=false
 Icon=utilities-system-monitor
 X-GNOME-Autostart-enabled=true
 MENUEOF
