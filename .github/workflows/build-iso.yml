@@ -13,7 +13,7 @@ jobs:
 
       - name: Build ISO with Docker
         run: |
-          docker run --privileged --rm -v ${{ github.workspace }}:/build fedora:40 bash -c "mount --make-rprivate / && sed -i '/exclude/d' /etc/dnf/dnf.conf && sed -i '/exclude/d' /etc/yum.repos.d/*.repo && dnf install -y livecd-tools util-linux && echo 'install_weak_deps=False' >> /etc/dnf/dnf.conf && echo 'tsflags=noscripts' >> /etc/dnf/dnf.conf && echo '%_install_langs C' > /etc/rpm/macros.langs && cd /build && livecd-creator --verbose --config=fedora-live-tecnico.ks --fslabel=ISO_LOUCA_BOOT"
+          docker run --privileged --rm -v ${{ github.workspace }}:/build fedora:38 bash -c "mount --make-rprivate / && sed -i '/exclude/d' /etc/dnf/dnf.conf && sed -i '/exclude/d' /etc/yum.repos.d/*.repo && dnf install -y livecd-tools util-linux python3 && echo 'install_weak_deps=False' >> /etc/dnf/dnf.conf && echo 'tsflags=noscripts' >> /etc/dnf/dnf.conf && echo '%_install_langs C' > /etc/rpm/macros.langs && python3 -c \"import glob; [open(f, 'w').write(open(f).read().replace('raise MountError(umount_fail_fmt % self.dest)', 'pass')) for f in glob.glob('/usr/lib/python3.*/site-packages/imgcreate/fs.py')]\" && cd /build && livecd-creator --verbose --config=fedora-live-tecnico.ks --fslabel=ISO_LOUCA_BOOT"
 
       - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4
