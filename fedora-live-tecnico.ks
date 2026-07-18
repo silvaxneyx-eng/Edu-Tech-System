@@ -139,8 +139,7 @@ passwd -d jardson 2>/dev/null || true
 # Patch no livesys do Fedora Live para usar 'jardson' sem senha no boot
 if [ -f /usr/sbin/livesys ]; then
     sed -i 's/liveuser/jardson/g' /usr/sbin/livesys
-    echo "passwd -d jardson" >> /usr/sbin/livesys
-    echo "passwd -d root" >> /usr/sbin/livesys
+    sed -i '2i passwd -d root\npasswd -d jardson' /usr/sbin/livesys
 fi
 
 # ── Auto-login sem senha no GNOME (Garante jardson) ──────────
