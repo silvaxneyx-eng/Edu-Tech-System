@@ -23,10 +23,8 @@ gnome-terminal
 nautilus
 gdm
 
-# Navegador e compatibilidade Windows
+# Navegador
 firefox
-wine-core
-wine-common
 
 # Utilitários essenciais de técnico
 gparted
@@ -70,10 +68,6 @@ clamav-update
 # Extras
 screen
 pv
-rclone
-chntpw
-stress-ng
-memtester
 %end
 
 %post
