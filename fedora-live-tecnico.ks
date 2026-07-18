@@ -36,6 +36,7 @@ smartmontools
 # Excluir pacotes que explodem no Docker
 -*langpacks*
 -langpacks*
+-geolite2*
 %end
 
 %post
