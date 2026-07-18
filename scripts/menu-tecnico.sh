@@ -1,89 +1,60 @@
 #!/bin/bash
-# Menu Técnico Interativo para a ISO Bootável (Fedora Live OS)
+# ============================================================
+# Menu Técnico Gráfico (Zenity) - EduTechAnderlineNet
+# ============================================================
 
-# Cores
-VERDE='\033[0;32m'
-CIANO='\033[0;36m'
-AMARELO='\033[1;33m'
-VERMELHO='\033[0;31m'
-NC='\033[0m' # No Color
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-mostrar_cabecalho() {
-    clear
-    echo -e "${CIANO}=====================================================${NC}"
-    echo -e "${CIANO}             ISO LOUCA — MENU LINUX LIVE OS          ${NC}"
-    echo -e "${CIANO}=====================================================${NC}"
-    echo ""
-}
+show_menu() {
+    local choice
+    choice=$(zenity --list \
+        --title="🔧 Menu Técnico - EduTechAnderlineNet" \
+        --text="Selecione a ferramenta de manutenção que deseja executar:" \
+        --width=620 --height=450 \
+        --column="Ícone" --column="Opção" --column="Descrição" \
+        "🔑" "Resetar Senha" "Resetar a senha de contas do Windows local" \
+        "🛡️" "Scanner de Vírus" "Varredura antivírus offline com ClamAV" \
+        "💾" "Backup de Perfil" "Fazer backup automático das pastas do Windows" \
+        "💽" "Saúde do Disco (SMART)" "Verificar integridade física e erros do HD/SSD" \
+        "ℹ️" "Info do Hardware" "Mostrar detalhes técnicos da máquina (Processador, RAM, etc)" \
+        "🗃️" "GParted (Partições)" "Abrir o editor de partições de disco" \
+        "📁" "Nautilus (Arquivos)" "Abrir o gerenciador de arquivos como root" \
+        "💻" "Abrir Terminal" "Abrir terminal do sistema técnico" \
+        --ok-label="Executar" --cancel-label="Sair")
 
-while true; do
-    mostrar_cabecalho
-    
-    echo -e "  [1] Resetar Senha do Windows (chntpw)"
-    echo -e "  [2] Scanner de Vírus Offline (ClamAV)"
-    echo -e "  [3] Backup Automático de Perfis Windows"
-    echo -e "  [4] Diagnóstico SMART e Discos (smartctl)"
-    echo -e "  [5] Informações do Sistema Completa (inxi / lshw)"
-    echo -e "  [6] Teste de Estresse da CPU (stress-ng)"
-    echo -e "  [7] Abrir GParted (Gerenciador de Partições)"
-    echo -e "  [8] Abrir Gerenciador de Arquivos (Nautilus)"
-    echo -e "  [0] Sair / Abrir Terminal Bash"
-    echo ""
-    
-    read -p "Escolha uma opção: " opcao
-    
-    case $opcao in
-        1)
-            echo -e "\n${AMARELO}Iniciando resetador de senha...${NC}"
-            sudo bash "$(dirname "$0")/resetar-senha-automatico.sh"
+    if [ $? -ne 0 ]; then
+        exit 0
+    fi
+
+    case "$choice" in
+        "Resetar Senha")
+            gnome-terminal --title="🔑 Resetar Senha Windows" -- bash -c "sudo bash '$SCRIPT_DIR/resetar-senha-automatico.sh'; echo -e '\nPressione ENTER para fechar...'; read"
             ;;
-        2)
-            echo -e "\n${AMARELO}Iniciando varredura antivírus offline...${NC}"
-            sudo bash "$(dirname "$0")/scanner-virus-offline.sh"
+        "Scanner de Vírus")
+            gnome-terminal --title="🛡️ Scanner de Vírus ClamAV" -- bash -c "sudo bash '$SCRIPT_DIR/scanner-virus-offline.sh'; echo -e '\nPressione ENTER para fechar...'; read"
             ;;
-        3)
-            echo -e "\n${AMARELO}Iniciando backup automático de perfis...${NC}"
-            sudo bash "$(dirname "$0")/backup-perfil-automatico.sh"
+        "Backup de Perfil")
+            gnome-terminal --title="💾 Backup de Perfil Windows" -- bash -c "sudo bash '$SCRIPT_DIR/backup-perfil-automatico.sh'; echo -e '\nPressione ENTER para fechar...'; read"
             ;;
-        4)
-            echo -e "\n${CIANO}--- Saúde dos Discos (SMART) ---${NC}"
-            discos=$(lsblk -dlo NAME,TYPE | grep disk | awk '{print $1}')
-            for d in $discos; do
-                echo -e "\n${AMARELO}Verificando /dev/$d:${NC}"
-                sudo smartctl -H "/dev/$d"
-            done
+        "Saúde do Disco (SMART)")
+            gnome-terminal --title="💽 Saúde do Disco (SMART)" -- bash -c "sudo bash '$SCRIPT_DIR/diagnostico-discos.sh'; echo -e '\nPressione ENTER para fechar...'; read"
             ;;
-        5)
-            echo -e "\n${CIANO}--- Informações do Hardware ---${NC}"
-            if command -v inxi &> /dev/null; then
-                inxi -F
-            else
-                sudo lshw -short
-            fi
+        "Info do Hardware")
+            gnome-terminal --title="ℹ️ Informações de Hardware" -- bash -c "echo -e '--- Informações de Hardware ---\n'; inxi -F 2>/dev/null || sudo lshw -short; echo -e '\nPressione ENTER para fechar...'; read"
             ;;
-        6)
-            echo -e "\n${AMARELO}Rodando teste de estresse de 30 segundos na CPU...${NC}"
-            stress-ng --cpu 0 --timeout 30s --metrics-brief
+        "GParted (Partições)")
+            sudo gparted &
             ;;
-        7)
-            echo -e "\n${AMARELO}Abrindo GParted em background...${NC}"
-            sudo gparted &>/dev/null &
+        "Nautilus (Arquivos)")
+            sudo nautilus &
             ;;
-        8)
-            echo -e "\n${AMARELO}Abrindo Nautilus...${NC}"
-            nautilus &>/dev/null &
-            ;;
-        0)
-            echo -e "\n${VERDE}Saindo para o terminal...${NC}"
-            break
-            ;;
-        *)
-            echo -e "\n${VERMELHO}Opção inválida!${NC}"
-            sleep 1
-            continue
+        "Abrir Terminal")
+            gnome-terminal &
             ;;
     esac
-    
-    echo -e "\n${VERDE}Ação finalizada.${NC} Pressione [Enter] para voltar ao menu."
-    read
+}
+
+# Loop para manter o menu aberto até clicar em Sair
+while true; do
+    show_menu
 done
