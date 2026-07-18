@@ -27,15 +27,11 @@ jobs:
             --distribution bookworm \
             --architecture amd64 \
             --binary-images iso-hybrid \
-            --bootloaders grub-efi,syslinux \
             --debian-installer none \
             --chroot-filesystem squashfs \
             --compression xz \
-            --updates true \
-            --security true \
             --apt-recommends false \
-            --iso-volume "ISO-LOUCA" \
-            --image-name "iso-louca-lxqt"
+            --iso-volume "ISO-LOUCA"
 
       - name: Copiar configurações do live-build
         run: |
@@ -67,13 +63,15 @@ jobs:
 
       - name: Verificar ISO gerada
         run: |
-          ls -lh build/*.iso || (echo "ERRO: ISO não foi gerada!" && cat build/build.log | tail -50 && exit 1)
+          ls -lh build/*.iso 2>/dev/null || (echo "ERRO: ISO não foi gerada!" && tail -50 build/build.log && exit 1)
+          # Renomear para nome amigável
+          find build/ -name "*.iso" -exec cp {} build/ISO-LOUCA-LXQt.iso \; || true
 
       - name: Upload da ISO como artefato
         uses: actions/upload-artifact@v4
         with:
           name: ISO-LOUCA-LXQt-Dark
-          path: build/iso-louca-lxqt-amd64.hybrid.iso
+          path: build/ISO-LOUCA-LXQt.iso
           retention-days: 7
 
       - name: Upload do log de build (se falhar)
