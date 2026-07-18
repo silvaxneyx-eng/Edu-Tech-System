@@ -154,11 +154,15 @@ mkdir -p /home/tecnico/.config/autostart
 cat > /home/tecnico/.config/autostart/setup.desktop << 'DTEOF'
 [Desktop Entry]
 Type=Application
-Exec=bash -c "gsettings set org.gnome.desktop.interface color-scheme prefer-dark; gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'; gsettings set org.gnome.desktop.screensaver lock-enabled false; gsettings set org.gnome.desktop.session idle-delay 0; gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'"
+Exec=bash -c "gsettings set org.gnome.desktop.interface color-scheme prefer-dark; gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'; gsettings set org.gnome.desktop.screensaver lock-enabled false; gsettings set org.gnome.desktop.session idle-delay 0; gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'; gsettings set org.gnome.desktop.background picture-uri 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.desktop.background picture-uri-dark 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.desktop.background picture-options 'zoom'; gsettings set org.gnome.desktop.screensaver picture-uri 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'"
 Hidden=false
 X-GNOME-Autostart-enabled=true
 Name=Setup Tecnico
 DTEOF
+
+# ── Cria pasta de wallpapers ────────────────────────────────
+mkdir -p /usr/share/wallpapers/edutecnico
+mkdir -p /usr/share/gnome-background-properties
 
 # ── Atalho na área de trabalho: Menu do Técnico ──────────────
 cat > /home/tecnico/Desktop/Menu-Tecnico.desktop << 'MENUEOF'
@@ -257,7 +261,46 @@ cp /build/scripts/*.sh $INSTALL_ROOT/home/tecnico/Scripts/ 2>/dev/null || true
 cp /build/scripts/*.ps1 $INSTALL_ROOT/home/tecnico/Scripts/ 2>/dev/null || true
 cp /build/scripts/*.cmd $INSTALL_ROOT/home/tecnico/Scripts/ 2>/dev/null || true
 chmod -R +x $INSTALL_ROOT/home/tecnico/Scripts/
-chroot $INSTALL_ROOT chown -R tecnico:tecnico /home/tecnico/Scripts
+chroot $INSTALL_ROOT chown -R tecnico:tecnico /home/tecnico/Scripts 2>/dev/null || true
+
+# ── Copiar wallpapers para dentro da ISO ─────────────────────
+mkdir -p $INSTALL_ROOT/usr/share/wallpapers/edutecnico
+mkdir -p $INSTALL_ROOT/usr/share/gnome-background-properties
+cp /build/Wallpapers/*.png $INSTALL_ROOT/usr/share/wallpapers/edutecnico/ 2>/dev/null || true
+cp /build/Wallpapers/*.jpg $INSTALL_ROOT/usr/share/wallpapers/edutecnico/ 2>/dev/null || true
+
+# Registrar wallpapers no seletor do GNOME
+cat > $INSTALL_ROOT/usr/share/gnome-background-properties/edutecnico.xml << 'WALLEOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
+<wallpapers>
+  <wallpaper deleted="false">
+    <name>EduTechAnderlineNet - 1920x1080</name>
+    <filename>/usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png</filename>
+    <options>zoom</options>
+    <shade_type>solid</shade_type>
+    <pcolor>#000000</pcolor>
+    <scolor>#000000</scolor>
+  </wallpaper>
+  <wallpaper deleted="false">
+    <name>EduTechAnderlineNet - 1440x900</name>
+    <filename>/usr/share/wallpapers/edutecnico/wallpaper4_1440x900.png</filename>
+    <options>zoom</options>
+    <shade_type>solid</shade_type>
+    <pcolor>#000000</pcolor>
+    <scolor>#000000</scolor>
+  </wallpaper>
+  <wallpaper deleted="false">
+    <name>EduTechAnderlineNet - 1152x864</name>
+    <filename>/usr/share/wallpapers/edutecnico/wallpaper4_1152x864.png</filename>
+    <options>zoom</options>
+    <shade_type>solid</shade_type>
+    <pcolor>#000000</pcolor>
+    <scolor>#000000</scolor>
+  </wallpaper>
+</wallpapers>
+WALLEOF
+
 
 # ── WORKAROUND: Desmontagem forçada ──────────────────────────
 umount -l $INSTALL_ROOT/var/cache/dnf || true
