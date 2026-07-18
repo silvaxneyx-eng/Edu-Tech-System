@@ -11,7 +11,10 @@ mkdir -p /usr/local/lib/iso-louca
 
 # Copiar todos os scripts técnicos
 cp /scripts/*.sh /usr/local/lib/iso-louca/ 2>/dev/null || true
-chmod +x /usr/local/lib/iso-louca/*.sh
+chmod +x /usr/local/lib/iso-louca/*.sh 2>/dev/null || true
+
+# Remover a pasta de scripts raiz (usada apenas como meio de transporte pelo Github Actions)
+rm -rf /scripts 2>/dev/null || true
 
 # Criar launcher principal que chama o menu com o caminho correto
 cat > /usr/local/bin/menu-tecnico.sh << 'LAUNCHER'

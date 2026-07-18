@@ -3,6 +3,10 @@
 # ================================================================
 
 # --- Desktop LXQt ---
+xserver-xorg
+xserver-xorg-video-all
+xserver-xorg-input-all
+dbus-x11
 lxqt
 lxqt-core
 openbox
