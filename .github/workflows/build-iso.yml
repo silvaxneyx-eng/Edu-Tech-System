@@ -58,8 +58,10 @@ jobs:
 
       - name: Build da ISO
         run: |
+          set -o pipefail
           cd build
           sudo lb build 2>&1 | tee build.log
+          echo "Exit code do lb build: $?"
 
       - name: Verificar ISO gerada
         run: |
@@ -72,12 +74,10 @@ jobs:
         with:
           name: ISO-LOUCA-LXQt-Dark
           path: build/ISO-LOUCA-LXQt.iso
-          retention-days: 7
+          retention-days: 1
 
-      - name: Upload do log de build (se falhar)
+      - name: Mostrar log de build (se falhar)
         if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-log
-          path: build/build.log
-          retention-days: 3
+        run: |
+          echo "=== ULTIMAS 100 LINHAS DO LOG ==="
+          tail -100 build/build.log 2>/dev/null || echo "Log nao encontrado"
