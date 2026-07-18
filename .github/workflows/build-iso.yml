@@ -9,6 +9,8 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     timeout-minutes: 60
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout código
@@ -76,12 +78,17 @@ jobs:
           sudo chown $USER:$USER build/ISO-LOUCA-LXQt.iso
           ls -lh build/ISO-LOUCA-LXQt.iso
 
-      - name: Upload da ISO
-        uses: actions/upload-artifact@v4
+      - name: Upload da ISO como Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: ISO-LOUCA-LXQt-Dark
-          path: build/ISO-LOUCA-LXQt.iso
-          retention-days: 1
+          tag_name: build-${{ github.run_number }}
+          name: ISO LOUCA - Build ${{ github.run_number }}
+          files: build/ISO-LOUCA-LXQt.iso
+          body: "Build gerado automaticamente via GitHub Actions (Debian Bookworm LXQt)."
+          draft: false
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Mostrar log de build (se falhar)
         if: failure()
