@@ -17,7 +17,17 @@ jobs:
       - name: Instalar live-build e keyrings
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y live-build debootstrap debian-archive-keyring
+          sudo apt-get install -y live-build debootstrap gnupg2
+
+      - name: Importar chave GPG do Debian Bookworm
+        run: |
+          # Baixar a chave de assinatura atual do Debian 12 (Bookworm)
+          curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc \
+            | sudo gpg --dearmor -o /usr/share/keyrings/debian-archive-keyring.gpg
+          # Chave de segurança
+          curl -fsSL https://ftp-master.debian.org/keys/archive-key-12-security.asc \
+            | sudo gpg --dearmor >> /usr/share/keyrings/debian-archive-keyring.gpg
+          echo "Keyrings importados com sucesso."
 
       - name: Inicializar configuração do live-build
         run: |
