@@ -1,112 +1,113 @@
-# Kickstart para construir o sistema Live Técnico baseado no Fedora Workstation (GNOME)
-# Usado por: livecd-creator
+# Kickstart para ISO Técnico - EduTechAnderlineNet
+# Créditos: EduTechAnderlineNet
 
 lang pt_BR.UTF-8
 keyboard br
 timezone America/Sao_Paulo
 selinux --disabled
-firewall --enabled --service=mdns
+firewall --disabled
 xconfig --startxonboot
 zerombr
 clearpart --all
 part / --size 8192 --fstype ext4
 
-# Repositórios Oficiais do Fedora 44
+# Repositórios Oficiais do Fedora 40
 repo --name=fedora --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-40&arch=$basearch
 repo --name=updates --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f40&arch=$basearch
 
-%packages
+%packages --skip-broken
+# Base gráfica mínima
 @base-x
-@fonts
 gnome-shell
-nautilus
 gnome-terminal
-wine-core
-wine-common
+nautilus
+gdm
+
+# Utilitários essenciais de técnico
 gparted
-firefox
 testdisk
-ddrescue
 ntfs-3g
 util-linux
 tar
 unzip
 wget
 curl
-# Adições úteis para o Técnico de Manutenção:
-chntpw
-smartmontools
-stress-ng
-memtester
-lm_sensors
+rsync
 htop
-partclone
-rclone
-pv
+mc
+nano
+vim-minimal
+
+# Diagnóstico de hardware
+smartmontools
+lm_sensors
+hdparm
+dmidecode
+lshw
+inxi
+iotop
+nvme-cli
+
+# Rede
 nmap
 iperf3
 cifs-utils
 samba-client
-# Scanner de vírus offline:
+
+# Recuperação de dados
+ddrescue
+partclone
+
+# Antivírus offline
 clamav
 clamav-update
-# Limpeza segura de disco:
-coreutils
-# Monitoramento e diagnóstico:
-iotop
-nvme-cli
-hdparm
-dmidecode
-inxi
-lshw
-# Extras úteis:
-rsync
+
+# Extras
 screen
-mc
-nano
-vim-minimal
+pv
+rclone
+chntpw
+stress-ng
+memtester
 %end
 
 %post
-# Configura o autologin do usuário live 'tecnico'
-cat <<EOF > /etc/gdm/custom.conf
+# Cria o usuário tecnico
+useradd -m -G wheel tecnico
+echo "tecnico" | passwd --stdin tecnico 2>/dev/null || true
+
+# Configura autologin
+mkdir -p /etc/gdm
+cat > /etc/gdm/custom.conf << 'GDMEOF'
 [daemon]
 AutomaticLoginEnable=True
 AutomaticLogin=tecnico
-EOF
+GDMEOF
 
-# Cria o usuário tecnico se não existir
-useradd -m -G wheel tecnico
-
-# Copia os scripts úteis para a Área de Trabalho do técnico
+# Cria pasta Desktop
 mkdir -p /home/tecnico/Desktop
-cp /run/initramfs/live/Scripts/resetar-senha-automatico.sh /home/tecnico/Desktop/Resetar-Senha.sh
-cp /run/initramfs/live/Scripts/scanner-virus-offline.sh /home/tecnico/Desktop/Scanner-Virus-Offline.sh
-cp /run/initramfs/live/Scripts/backup-perfil-automatico.sh /home/tecnico/Desktop/Backup-Perfil-Windows.sh
-cp /run/initramfs/live/Scripts/diagnostico-discos.sh /home/tecnico/Desktop/Diagnostico-Discos-SMART.sh
-cp /run/initramfs/live/Scripts/reparo-boot-windows.sh /home/tecnico/Desktop/Reparo-Bootloader-Windows.sh
-cp /run/initramfs/live/Scripts/limpeza-segura-disco.sh /home/tecnico/Desktop/Limpeza-Segura-Disco.sh
-cp /run/initramfs/live/Scripts/menu-tecnico.sh /home/tecnico/Desktop/Menu-Tecnico.sh
 
-chmod +x /home/tecnico/Desktop/*.sh
+# Copia scripts se existirem
+for f in resetar-senha-automatico diagnostico-discos reparo-boot-windows limpeza-segura-disco menu-tecnico scanner-virus-offline; do
+    if [ -f /run/initramfs/live/scripts/${f}.sh ]; then
+        cp /run/initramfs/live/scripts/${f}.sh /home/tecnico/Desktop/${f}.sh
+        chmod +x /home/tecnico/Desktop/${f}.sh
+    fi
+done
 
-# Configura tema escuro e desativa bloqueio de tela do GNOME
-su - tecnico -c "dbus-launch gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'"
-su - tecnico -c "dbus-launch gsettings set org.gnome.desktop.screensaver lock-enabled false"
-su - tecnico -c "dbus-launch gsettings set org.gnome.desktop.session idle-delay 0"
-
-# Script de boas-vindas do Técnico com o visual limpo do GNOME
+# Tema escuro (melhor esforço)
 mkdir -p /home/tecnico/.config/autostart
-cat <<EOF > /home/tecnico/.config/autostart/tecnico-welcome.desktop
+cat > /home/tecnico/.config/autostart/setup.desktop << 'DTEOF'
 [Desktop Entry]
 Type=Application
-Exec=gnome-terminal -- bash -c "/home/tecnico/Desktop/Menu-Tecnico.sh; exec bash"
+Exec=bash -c "gsettings set org.gnome.desktop.interface color-scheme prefer-dark; gsettings set org.gnome.desktop.screensaver lock-enabled false; gsettings set org.gnome.desktop.session idle-delay 0"
 Hidden=false
-NoDisplay=false
 X-GNOME-Autostart-enabled=true
-Name=Abrir Menu de Ferramentas
-Comment=Abre o menu interativo com os utilitários do sistema
-EOF
+Name=Setup
+DTEOF
 
 chown -R tecnico:tecnico /home/tecnico
+
+# Créditos no sistema
+echo "EduTechAnderlineNet - ISO Técnico" > /etc/issue
 %end
