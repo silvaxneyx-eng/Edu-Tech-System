@@ -28,7 +28,6 @@ curl
 nano
 vim-minimal
 htop
-gparted
 testdisk
 ntfs-3g
 smartmontools
