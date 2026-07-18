@@ -2,94 +2,86 @@
 🔧 ISO TÉCNICO EDUTECHANDERLINENET - GUIA DE FERRAMENTAS E USO 🔧
 ================================================================================
 
-Este documento explica para que serve cada atalho na Área de Trabalho e cada
-aplicativo pré-instalado na sua ISO de manutenção.
+Este documento explica para que serve cada atalho na Área de Trabalho e como
+o sistema se comporta ao lidar com computadores de clientes com problemas.
+
+Este arquivo está localizado na Área de Trabalho do usuário "tecnico".
+
+--------------------------------------------------------------------------------
+⚠️ CASO PRÁTICO: O WINDOWS NÃO ABRE (BOOT CORROMPIDO / TELA AZUL)
+--------------------------------------------------------------------------------
+Se o Windows do cliente não inicia, não se preocupe! Os arquivos dele ainda estão 
+guardados no HD/SSD. Veja como a ISO facilita o seu trabalho de resgate:
+
+1. MONTAGEM AUTOMÁTICA DE DISCOS:
+   Logo após a inicialização, um script varre o computador procurando os discos do
+   cliente. Ele monta automaticamente as partições NTFS (Windows), FAT32 ou ext4.
+   * Onde ficam os arquivos?
+     Abra o Gerenciador de Arquivos (Nautilus) e vá na pasta:
+     📂 /mnt/clientes/ (ex: /mnt/clientes/sda3_Windows ou sda2_Dados)
+     Tudo do cliente estará lá dentro pronto para ser copiado.
+
+2. CONTORNO DE HIBERNAÇÃO (Fast Startup / Windows Travado):
+   Quando o Windows trava ou desliga incorretamente, ele deixa o HD "semi-hibernado"
+   e travado contra gravação. A nossa ISO detecta isso e força a limpeza da hibernação 
+   (remove_hiberfile). Assim, você consegue copiar arquivos novos para o HD dele ou
+   deletar vírus diretamente.
+
+3. MODO DE SEGURANÇA EM HDS COM DEFEITO (Bad Blocks):
+   Se o HD do cliente estiver quebrado fisicamente ou morrendo, o script montará a
+   partição em modo "Somente Leitura" automaticamente. Isso protege os dados do
+   cliente contra novas falhas enquanto você copia o backup para o seu HD externo.
 
 --------------------------------------------------------------------------------
 1. ATALHOS NA ÁREA DE TRABALHO (SCRIPTS & INTERFACES)
 --------------------------------------------------------------------------------
 
 * [🔧 Menu Técnico EduTech]
-  O painel central de controle. Abre uma janela gráfica (Zenity) para você escolher
-  qualquer um dos scripts de reparo do sistema sem precisar digitar comandos.
+  O painel central de controle do seu sistema. Abre uma janela gráfica (Zenity) 
+  para você escolher e executar todos os scripts com facilidade usando o mouse.
 
 * [🛡️ Scanner de Vírus Offline] (scanner-virus-offline.sh)
-  Monta o disco do cliente e faz uma varredura profunda em busca de vírus e 
-  malwares usando o motor ClamAV. Ideal para remover vírus difíceis que se
-  escondem quando o Windows está ligado.
+  Faz uma varredura completa por vírus e malwares nas partições Windows usando o ClamAV. 
+  Excelente para remover malwares difíceis sem precisar ligar o Windows infectado.
 
 * [💾 Backup de Perfil] (backup-perfil-automatico.sh)
-  Detecta a partição de dados do cliente (C:\Users) e copia todas as pastas importantes
-  (Área de Trabalho, Documentos, Imagens, Downloads) para um HD externo automaticamente.
-  Utiliza o rsync para garantir que nenhum arquivo se perca.
+  Copia as pastas de usuário (Área de Trabalho, Documentos, Imagens, Downloads) do 
+  HD montado do cliente para um HD externo automaticamente. Usa a robustez do rsync.
 
 * [🔑 Resetar Senha Windows] (resetar-senha-automatico.sh)
-  Reseta a senha de qualquer conta do Windows local. Se o cliente esqueceu a senha
-  ou o usuário administrador foi desativado, essa ferramenta limpa a senha em segundos.
+  Reseta e remove a senha de qualquer conta local do Windows. Ideal para quando o cliente
+  esquece a senha de entrada da máquina.
 
 * [💽 Diagnóstico de Discos] (diagnostico-discos.sh)
-  Faz testes rápidos de leitura física nos discos conectados e exibe o relatório S.M.A.R.T
-  de saúde (temperatura, setores defeituosos, tempo de vida útil restante).
+  Faz testes rápidos de hardware e exibe informações S.M.A.R.T sobre a integridade física
+  do disco (setores defeituosos, horas de uso, temperatura).
 
 * [🗃️ GParted]
-  Ferramenta profissional gráfica de partições. Permite redimensionar partições, formatar
-  em NTFS/FAT32/ext4, e criar partições novas em HDs e SSDs.
-
-* [Montagem Automática] (montar-discos-automatico.sh)
-  Roda em background na inicialização do sistema. Detecta e monta qualquer HD/SSD do cliente
-  automaticamente na pasta /mnt/clientes/ (com suporte a gravação NTFS-3g), deixando tudo
-  pronto para uso instantaneamente.
+  Ferramenta gráfica de partição. Use para redimensionar, formatar ou verificar 
+  erros em partições do sistema.
 
 --------------------------------------------------------------------------------
 2. APLICATIVOS DO SISTEMA OPERACIONAL
 --------------------------------------------------------------------------------
 
 * [🌐 Firefox]
-  Navegador oficial. Útil para buscar esquemas de rede, manuais, ou baixar drivers
-  e ISOs de instalação de sistemas na bancada do cliente.
+  Navegador web completo para pesquisar esquemas de rede ou baixar ferramentas portáteis.
 
 * [🍷 Wine]
-  Camada de compatibilidade. Permite executar aplicativos .exe leves do Windows
-  diretamente dentro do Linux. Excelente para rodar executáveis portáteis de teste.
+  Permite executar aplicativos ".exe" portáteis do Windows diretamente no Linux técnico.
 
 * [📁 Nautilus]
-  O gerenciador de arquivos do GNOME (como o Explorer do Windows). Use-o para navegar
-  nos arquivos do cliente, copiar e colar dados manualmente.
+  O gerenciador de arquivos visual da Área de Trabalho.
 
 * [📊 Htop]
-  Monitor de processos moderno. Mostra consumo de memória RAM, CPU, e se há algum processo
-  travando o computador de teste.
-
-* [🖥️ Terminal]
-  Acesso ao terminal Bash raiz do Linux Fedora para rodar ferramentas rápidas de linha
-  de comando.
+  Monitor gráfico do consumo de RAM, processador e temperatura em tempo real.
 
 --------------------------------------------------------------------------------
-3. FERRAMENTAS DE RECUPERAÇÃO INCLUSAS (VIA TERMINAL)
---------------------------------------------------------------------------------
-
-* [testdisk]
-  Recupera partições inteiras que sumiram, ficaram marcadas como RAW ou foram excluídas
-  por acidente. Reconstrói a tabela de partição (MBR/GPT).
-
-* [photorec] (incluso no testdisk)
-  Faz varredura profunda no disco (mesmo formatado) em busca de cabeçalhos de arquivos.
-  Recupera fotos, documentos, vídeos e PDFs deletados acidentalmente.
-
-* [ddrescue] (GNU ddrescue)
-  Ideal para HDs ruins/batendo agulha. Copia os blocos legíveis de um HD defeituoso
-  para um HD saudável, ignorando blocos ruins para salvar o máximo de dados possível.
-
-* [nmap]
-  Varredura e diagnóstico de rede. Identifica IPs ativos, portas abertas e vulnerabilidades
-  na rede local do cliente.
-
---------------------------------------------------------------------------------
-4. INFORMAÇÕES DE LOGIN PADRÃO (Se solicitado)
+3. INFORMAÇÕES DE LOGIN PADRÃO
 --------------------------------------------------------------------------------
 * Usuário do Técnico: tecnico  | Senha: edutecnico
 * Administrador Root: root     | Senha: edutecnico
-* Auto-login: Sim (o sistema entra na Área de Trabalho sem pedir senha)
+* Auto-login: Sim (o sistema entra na Área de Trabalho direto sem senha)
 ================================================================================
 🔧 EduTechAnderlineNet - 2026 🔧
 ================================================================================
