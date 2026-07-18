@@ -41,7 +41,6 @@ memtester
 lm_sensors
 htop
 partclone
-partimage
 rclone
 pv
 nmap
@@ -53,11 +52,8 @@ clamav
 clamav-update
 # Recuperação de arquivos deletados:
 photorec
-# Reparo de bootloader Windows:
-ms-sys
 # Limpeza segura de disco:
 coreutils
-wipe
 # Monitoramento e diagnóstico:
 iotop
 nvme-cli
