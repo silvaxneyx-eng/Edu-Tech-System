@@ -130,25 +130,34 @@ gedit
 -geolite2*
 %end
 
+%post
 # ── Garante senhas e permissões (dupla garantia) ──────────────
-echo 'root:edutecnico' | chpasswd 2>/dev/null || true
-echo 'liveuser:edutecnico' | chpasswd 2>/dev/null || true
+useradd -m -G wheel jardson 2>/dev/null || true
+echo 'root:2412' | chpasswd 2>/dev/null || true
+echo 'jardson:2412' | chpasswd 2>/dev/null || true
 
-# ── Auto-login sem senha no GNOME (Garante liveuser) ──────────
+# Patch no livesys do Fedora Live para usar 'jardson' e senha '2412' no boot
+if [ -f /usr/sbin/livesys ]; then
+    sed -i 's/liveuser/jardson/g' /usr/sbin/livesys
+    echo "echo 'jardson:2412' | chpasswd" >> /usr/sbin/livesys
+    echo "echo 'root:2412' | chpasswd" >> /usr/sbin/livesys
+fi
+
+# ── Auto-login sem senha no GNOME (Garante jardson) ──────────
 mkdir -p /etc/gdm
 cat > /etc/gdm/custom.conf << 'GDMEOF'
 [daemon]
 AutomaticLoginEnable=True
-AutomaticLogin=liveuser
+AutomaticLogin=jardson
 GDMEOF
 
-# ── Cria estrutura de pastas para o liveuser ──────────────────
-mkdir -p /home/liveuser/Desktop
-mkdir -p /home/liveuser/Documentos
-mkdir -p /home/liveuser/.config/autostart
+# ── Cria estrutura de pastas para o jardson ──────────────────
+mkdir -p /home/jardson/Desktop
+mkdir -p /home/jardson/Documentos
+mkdir -p /home/jardson/.config/autostart
 
 # ── Tema escuro + Tela sem bloqueio ──────────────────────────
-cat > /home/liveuser/.config/autostart/setup.desktop << 'DTEOF'
+cat > /home/jardson/.config/autostart/setup.desktop << 'DTEOF'
 [Desktop Entry]
 Type=Application
 Exec=bash -c "gsettings set org.gnome.desktop.interface color-scheme prefer-dark; gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'; gsettings set org.gnome.desktop.screensaver lock-enabled false; gsettings set org.gnome.desktop.session idle-delay 0; gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'; gsettings set org.gnome.desktop.background picture-uri 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.desktop.background picture-uri-dark 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.desktop.background picture-options 'zoom'; gsettings set org.gnome.desktop.screensaver picture-uri 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.shell favorite-apps \"['menu-tecnico.desktop', 'org.gnome.Nautilus.desktop', 'gparted.desktop', 'firefox.desktop']\""
@@ -158,20 +167,20 @@ Name=Setup Tecnico
 DTEOF
 
 # Autostart para o Menu Técnico
-cat > /home/liveuser/.config/autostart/abrir-menu.desktop << 'MENUSTARTEOF'
+cat > /home/jardson/.config/autostart/abrir-menu.desktop << 'MENUSTARTEOF'
 [Desktop Entry]
 Type=Application
-Exec=bash /home/liveuser/Scripts/menu-tecnico.sh
+Exec=bash /home/jardson/Scripts/menu-tecnico.sh
 Hidden=false
 X-GNOME-Autostart-enabled=true
 Name=Abrir Menu Tecnico
 MENUSTARTEOF
 
 # Autostart para Montagem Automática de Discos
-cat > /home/liveuser/.config/autostart/montar-discos.desktop << 'MONTEOF'
+cat > /home/jardson/.config/autostart/montar-discos.desktop << 'MONTEOF'
 [Desktop Entry]
 Type=Application
-Exec=bash -c "gnome-terminal --title='🔍 Montagem Automática' -- bash -c 'sudo bash /home/liveuser/Scripts/montar-discos-automatico.sh; echo; read -p \"Pressione ENTER para fechar...\"'"
+Exec=bash -c "gnome-terminal --title='🔍 Montagem Automática' -- bash -c 'sudo bash /home/jardson/Scripts/montar-discos-automatico.sh; echo; read -p \"Pressione ENTER para fechar...\"'"
 Hidden=false
 X-GNOME-Autostart-enabled=true
 Name=Montar Discos Clientes
@@ -188,66 +197,66 @@ cat > /usr/share/applications/menu-tecnico.desktop << 'GLOBALMENUEOF'
 Type=Application
 Name=Menu Técnico EduTech
 Comment=Painel de ferramentas de reparo
-Exec=bash /home/liveuser/Scripts/menu-tecnico.sh
+Exec=bash /home/jardson/Scripts/menu-tecnico.sh
 Terminal=false
 Icon=utilities-system-monitor
 Categories=System;Utility;
 GLOBALMENUEOF
 
 # ── Atalho na área de trabalho: Menu do Técnico ──────────────
-cat > /home/liveuser/Desktop/Menu-Tecnico.desktop << 'MENUEOF'
+cat > /home/jardson/Desktop/Menu-Tecnico.desktop << 'MENUEOF'
 [Desktop Entry]
 Type=Application
 Name=Menu Técnico EduTech
 Comment=Abrir menu de ferramentas do técnico
-Exec=bash /home/liveuser/Scripts/menu-tecnico.sh
+Exec=bash /home/jardson/Scripts/menu-tecnico.sh
 Terminal=false
 Icon=utilities-system-monitor
 X-GNOME-Autostart-enabled=true
 MENUEOF
 
 # ── Atalho: Diagnóstico de Discos ────────────────────────────
-cat > /home/liveuser/Desktop/Diagnostico-Discos.desktop << 'DIAGEOF'
+cat > /home/jardson/Desktop/Diagnostico-Discos.desktop << 'DIAGEOF'
 [Desktop Entry]
 Type=Application
 Name=Diagnóstico de Discos
-Exec=bash -c "bash /home/liveuser/Scripts/diagnostico-discos.sh; read -p 'Pressione ENTER para sair...'"
+Exec=bash -c "bash /home/jardson/Scripts/diagnostico-discos.sh; read -p 'Pressione ENTER para sair...'"
 Terminal=true
 Icon=drive-harddisk
 DIAGEOF
 
 # ── Atalho: Scanner de Vírus ──────────────────────────────────
-cat > /home/liveuser/Desktop/Scanner-Virus.desktop << 'VIRUSEOF'
+cat > /home/jardson/Desktop/Scanner-Virus.desktop << 'VIRUSEOF'
 [Desktop Entry]
 Type=Application
 Name=Scanner de Vírus Offline
-Exec=bash -c "bash /home/liveuser/Scripts/scanner-virus-offline.sh; read -p 'Pressione ENTER para sair...'"
+Exec=bash -c "bash /home/jardson/Scripts/scanner-virus-offline.sh; read -p 'Pressione ENTER para sair...'"
 Terminal=true
 Icon=security-high
 VIRUSEOF
 
 # ── Atalho: Backup de Perfil ──────────────────────────────────
-cat > /home/liveuser/Desktop/Backup-Perfil.desktop << 'BACKUPEOF'
+cat > /home/jardson/Desktop/Backup-Perfil.desktop << 'BACKUPEOF'
 [Desktop Entry]
 Type=Application
 Name=Backup de Perfil do Usuário
-Exec=bash -c "bash /home/liveuser/Scripts/backup-perfil-automatico.sh; read -p 'Pressione ENTER para sair...'"
+Exec=bash -c "bash /home/jardson/Scripts/backup-perfil-automatico.sh; read -p 'Pressione ENTER para sair...'"
 Terminal=true
 Icon=document-save
 BACKUPEOF
 
 # ── Atalho: Resetar Senha ─────────────────────────────────────
-cat > /home/liveuser/Desktop/Resetar-Senha.desktop << 'SENHAEOF'
+cat > /home/jardson/Desktop/Resetar-Senha.desktop << 'SENHAEOF'
 [Desktop Entry]
 Type=Application
 Name=Resetar Senha Windows
-Exec=bash -c "bash /home/liveuser/Scripts/resetar-senha-automatico.sh; read -p 'Pressione ENTER para sair...'"
+Exec=bash -c "bash /home/jardson/Scripts/resetar-senha-automatico.sh; read -p 'Pressione ENTER para sair...'"
 Terminal=true
 Icon=dialog-password
 SENHAEOF
 
 # ── Atalho: GParted ───────────────────────────────────────────
-cat > /home/liveuser/Desktop/GParted.desktop << 'GPARTED'
+cat > /home/jardson/Desktop/GParted.desktop << 'GPARTED'
 [Desktop Entry]
 Type=Application
 Name=GParted - Partições
@@ -256,37 +265,37 @@ Icon=gparted
 GPARTED
 
 # ── Permissões dos atalhos ────────────────────────────────────
-chmod +x /home/liveuser/Desktop/*.desktop
+chmod +x /home/jardson/Desktop/*.desktop
 
 # ── Créditos no sistema ───────────────────────────────────────
 cat > /etc/issue << 'ISSUEEOF'
 EduTechAnderlineNet - ISO Técnico FULLZÃO
-Usuário: liveuser | Senha: edutecnico
+Usuário: jardson | Senha: 2412
 ISSUEEOF
 
 # ── Permissões Especiais: Sudo Sem Senha ─────────────────────
-echo "liveuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/liveuser
-chmod 0440 /etc/sudoers.d/liveuser
+echo "jardson ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/jardson
+chmod 0440 /etc/sudoers.d/jardson
 
 # ── Permissões Especiais: Polkit Sem Senha para GParted ──────
 mkdir -p /etc/polkit-1/rules.d
-cat > /etc/polkit-1/rules.d/49-nopasswd-liveuser.rules << 'POLKITEOF'
+cat > /etc/polkit-1/rules.d/49-nopasswd-jardson.rules << 'POLKITEOF'
 polkit.addRule(function(action, subject) {
     if (subject.isInGroup("wheel")) {
         return polkit.Result.YES;
     }
 });
 POLKITEOF
-chmod 0644 /etc/polkit-1/rules.d/49-nopasswd-liveuser.rules
-chown root:root /etc/polkit-1/rules.d/49-nopasswd-liveuser.rules
+chmod 0644 /etc/polkit-1/rules.d/49-nopasswd-jardson.rules
+chown root:root /etc/polkit-1/rules.d/49-nopasswd-jardson.rules
 
 
 cat > /etc/motd << 'MOTDEOF'
 ============================================
  🔧 EduTechAnderlineNet - ISO Técnico FULL
 ============================================
- Usuário: liveuser   Senha: edutecnico
- Root:    root       Senha: edutecnico
+ Usuário: jardson    Senha: 2412
+ Root:    root       Senha: 2412
 
  Ferramentas na Área de Trabalho:
   - Menu do Técnico (todas as funções)
@@ -298,21 +307,21 @@ cat > /etc/motd << 'MOTDEOF'
 ============================================
 MOTDEOF
 
-chown -R liveuser:liveuser /home/liveuser
+chown -R jardson:jardson /home/jardson
 %end
 
 %post --nochroot
 # ── Copiar todos os scripts para a ISO ───────────────────────
-mkdir -p $INSTALL_ROOT/home/liveuser/Scripts
-cp /build/scripts/*.sh $INSTALL_ROOT/home/liveuser/Scripts/ 2>/dev/null || true
-cp /build/scripts/*.ps1 $INSTALL_ROOT/home/liveuser/Scripts/ 2>/dev/null || true
-cp /build/scripts/*.cmd $INSTALL_ROOT/home/liveuser/Scripts/ 2>/dev/null || true
-chmod -R +x $INSTALL_ROOT/home/liveuser/Scripts/
-chroot $INSTALL_ROOT chown -R liveuser:liveuser /home/liveuser/Scripts 2>/dev/null || true
+mkdir -p $INSTALL_ROOT/home/jardson/Scripts
+cp /build/scripts/*.sh $INSTALL_ROOT/home/jardson/Scripts/ 2>/dev/null || true
+cp /build/scripts/*.ps1 $INSTALL_ROOT/home/jardson/Scripts/ 2>/dev/null || true
+cp /build/scripts/*.cmd $INSTALL_ROOT/home/jardson/Scripts/ 2>/dev/null || true
+chmod -R +x $INSTALL_ROOT/home/jardson/Scripts/
+chroot $INSTALL_ROOT chown -R jardson:jardson /home/jardson/Scripts 2>/dev/null || true
 
 # ── Copiar arquivo de explicação de ferramentas para o Desktop ──────
-cp /build/Explica-Ferramentas.txt $INSTALL_ROOT/home/liveuser/Desktop/ 2>/dev/null || true
-chroot $INSTALL_ROOT chown liveuser:liveuser /home/liveuser/Desktop/Explica-Ferramentas.txt 2>/dev/null || true
+cp /build/Explica-Ferramentas.txt $INSTALL_ROOT/home/jardson/Desktop/ 2>/dev/null || true
+chroot $INSTALL_ROOT chown jardson:jardson /home/jardson/Desktop/Explica-Ferramentas.txt 2>/dev/null || true
 
 # ── Copiar wallpapers para dentro da ISO ─────────────────────
 mkdir -p $INSTALL_ROOT/usr/share/wallpapers/edutecnico

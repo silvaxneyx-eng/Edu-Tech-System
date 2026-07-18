@@ -85,8 +85,8 @@ guardados no HD/SSD. Veja como a ISO facilita o seu trabalho de resgate:
 --------------------------------------------------------------------------------
 3. INFORMAÇÕES DE LOGIN PADRÃO
 --------------------------------------------------------------------------------
-* Usuário do Técnico: liveuser | Senha: edutecnico
-* Administrador Root: root     | Senha: edutecnico
+* Usuário do Técnico: jardson  | Senha: 2412
+* Administrador Root: root     | Senha: 2412
 * Auto-login: Sim (o sistema entra na Área de Trabalho direto sem senha)
 ================================================================================
 🔧 EduTechAnderlineNet - 2026 🔧
