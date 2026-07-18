@@ -34,11 +34,8 @@ ntfs-3g
 smartmontools
 
 # Excluir pacotes que explodem no Docker
--gnome-all-langpacks
--langpacks-core-en
--langpacks-core-pt
--langpacks-en
--langpacks-pt
+-*langpacks*
+-langpacks*
 %end
 
 %post
