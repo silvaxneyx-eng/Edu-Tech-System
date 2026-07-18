@@ -50,13 +50,11 @@ NetworkManager
 NetworkManager-wifi
 nm-connection-editor
 
-# ── Navegador ────────────────────────────────────────────────
+# ── Navegador e Windows Compat ───────────────────────────────
 firefox
-
-# ── Compatibilidade com Windows (.exe) ───────────────────────
+wine
 wine-core
 wine-common
-wine-desktop
 
 # ── Gerenciamento de Partições e Discos ──────────────────────
 gparted
@@ -68,10 +66,8 @@ btrfs-progs
 xfsprogs
 parted
 
-# ── Recuperação de Dados ──────────────────────────────────────
-ddrescue
-partclone
-photorec
+# ── Recuperação de dados ──────────────────────────────────────
+gddrescue
 
 # ── Rede e Conectividade ──────────────────────────────────────
 nmap
@@ -79,7 +75,7 @@ iperf3
 cifs-utils
 samba-client
 openssh-clients
-wireshark-cli
+wireshark
 traceroute
 net-tools
 bind-utils
@@ -95,16 +91,12 @@ lshw
 inxi
 iotop
 nvme-cli
-memtest86+
-stress-ng
 pciutils
 usbutils
-cpu-x
 
 # ── Antivírus Offline ─────────────────────────────────────────
 clamav
 clamav-update
-clamtk
 
 # ── Ferramentas de Sistema ────────────────────────────────────
 util-linux
