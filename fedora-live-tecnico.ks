@@ -42,3 +42,10 @@ smartmontools
 %post
 echo "EduTechAnderlineNet - ISO Tecnico" > /etc/issue
 %end
+
+%post --nochroot
+# WORKAROUND: Forçar desmontagem preguiçosa do cache do DNF
+# para evitar o erro "leaked a reference to the filesystem"
+# comum no livecd-creator rodando em Docker.
+umount -l $INSTALL_ROOT/var/cache/dnf || true
+%end
