@@ -15,7 +15,18 @@ repo --name=fedora --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?rep
 repo --name=updates --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f40&arch=$basearch
 
 %packages
-# Apenas o essencial para funcionar
+# Apenas o essencial para funcionar e fazer boot
+kernel
+kernel-modules
+syslinux
+grub2-efi-ia32-cdboot
+grub2-efi-x64-cdboot
+grub2-pc
+grub2-pc-modules
+shim-ia32
+shim-x64
+dracut-live
+efibootmgr
 util-linux
 bash
 coreutils
