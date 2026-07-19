@@ -18,8 +18,8 @@ rootpw --plaintext edutecnico
 
 
 # Repositórios Oficiais do Fedora 44
-repo --name=fedora --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-44&arch=$basearch
-repo --name=updates --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f44&arch=$basearch
+repo --name=fedora --baseurl=https://dl.fedoraproject.org/pub/fedora/linux/releases/44/Everything/$basearch/os/
+repo --name=updates --baseurl=https://dl.fedoraproject.org/pub/fedora/linux/updates/44/Everything/$basearch/
 
 %packages
 # ── Boot e Kernel (OBRIGATÓRIO) ──────────────────────────────
