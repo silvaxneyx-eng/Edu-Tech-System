@@ -51,11 +51,8 @@ NetworkManager-wifi
 nm-connection-editor
 zenity
 
-# ── Navegador e Windows Compat ───────────────────────────────
+# ── Navegador ────────────────────────────────────────────────
 firefox
-wine
-wine-core
-wine-common
 
 # ── Gerenciamento de Partições e Discos ──────────────────────
 gparted
