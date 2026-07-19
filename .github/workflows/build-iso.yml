@@ -1,4 +1,4 @@
-name: Build ISO Louca (Debian Live / LXQt Dark)
+name: Build Fedora LiveCD ISO (GNOME)
 
 on:
   push:
@@ -7,92 +7,45 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     permissions:
       contents: write
 
     steps:
-      - name: Checkout código
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Preparar arquivos de build
+      - name: Build ISO with Docker
         run: |
-          mkdir -p build/config
-
-          # Copiar configurações do live-build
-          cp -r config/package-lists build/config/
-          cp -r config/hooks         build/config/
-          cp -r config/includes.chroot build/config/
-
-          # Wallpaper
-          mkdir -p build/config/includes.chroot/usr/share/backgrounds
-          cp "Wallpapers/wallpaper4_1440x900.png" \
-             build/config/includes.chroot/usr/share/backgrounds/tecnico-wallpaper.png
-
-          # Scripts técnicos
-          mkdir -p build/config/includes.chroot/scripts
-          cp scripts/*.sh build/config/includes.chroot/scripts/
-
-          # Permissões dos hooks
-          chmod +x build/config/hooks/live/*.hook.chroot
-
-      - name: Build da ISO (dentro do container Debian)
-        run: |
-          docker run --rm --privileged \
-            -v "${{ github.workspace }}/build:/workspace" \
-            debian:bookworm \
-            bash -c "
-              set -e
-              echo '=== Instalando live-build ==='
-              apt-get update -qq
-              apt-get install -y live-build
-
-              echo '=== Configurando live-build ==='
-              cd /workspace
-              lb config \
-                --distribution bookworm \
-                --architecture amd64 \
-                --binary-images iso-hybrid \
-                --debian-installer none \
-                --chroot-filesystem squashfs \
-                --compression xz \
-                --apt-recommends true \
-                --archive-areas 'main contrib non-free non-free-firmware' \
-                --bootappend-live 'boot=live components username=jardson' \
-                --iso-volume 'ISO-LOUCA' \
-                --mirror-bootstrap http://deb.debian.org/debian \
-                --mirror-chroot http://deb.debian.org/debian \
-                --mirror-binary http://deb.debian.org/debian \
-                --mirror-chroot-security http://security.debian.org/debian-security \
-                --mirror-binary-security http://security.debian.org/debian-security
-
-              echo '=== Iniciando build ==='
-              lb build 2>&1 | tee build.log
-              echo 'Build concluído!'
-            "
+          docker run --privileged --rm -v ${{ github.workspace }}:/build fedora:44 bash -c "
+            mount --make-rprivate /
+            sed -i '/exclude/d' /etc/dnf/dnf.conf
+            sed -i '/exclude/d' /etc/yum.repos.d/*.repo
+            dnf install -y livecd-tools util-linux
+            echo 'install_weak_deps=False' >> /etc/dnf/dnf.conf
+            echo '%_install_langs C' > /etc/rpm/macros.langs
+            # Ignorar MountError no loop device do docker
+            sed -i 's/raise MountError(umount_fail_fmt.*/pass/g' /usr/lib/python3.*/site-packages/imgcreate/fs.py
+            cd /build
+            sed -i 's/\r$//' fedora-live-tecnico.ks
+            sed -i 's/\r$//' scripts/*.sh
+            livecd-creator --verbose --config=fedora-live-tecnico.ks --fslabel=ISO_LOUCA_BOOT
+          "
 
       - name: Verificar e renomear ISO
         run: |
-          sudo ls -lh build/*.iso 2>/dev/null || (echo "ERRO: ISO não gerada!" && sudo tail -100 build/build.log && exit 1)
-          sudo find build/ -maxdepth 1 -name "*.iso" ! -name "ISO-LOUCA-LXQt.iso" -exec cp {} build/ISO-LOUCA-LXQt.iso \;
-          sudo chown $USER:$USER build/ISO-LOUCA-LXQt.iso
-          ls -lh build/ISO-LOUCA-LXQt.iso
+          ls -lh ISO_LOUCA_BOOT.iso || (echo "ERRO: ISO não gerada!" && exit 1)
+          cp ISO_LOUCA_BOOT.iso ISO-LOUCA-GNOME.iso
 
       - name: Upload da ISO como Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ github.run_number }}
           name: ISO LOUCA - Build ${{ github.run_number }}
-          files: build/ISO-LOUCA-LXQt.iso
-          body: "Build gerado automaticamente via GitHub Actions (Debian Bookworm LXQt)."
+          files: ISO-LOUCA-GNOME.iso
+          body: "Build gerado automaticamente via GitHub Actions (Fedora 44 GNOME)."
           draft: false
           prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Mostrar log de build (se falhar)
-        if: failure()
-        run: |
-          echo "=== ULTIMAS 100 LINHAS DO LOG ==="
-          tail -100 build/build.log 2>/dev/null || echo "Log nao encontrado"
