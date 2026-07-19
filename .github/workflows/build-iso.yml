@@ -59,7 +59,7 @@ jobs:
                 --compression xz \
                 --apt-recommends true \
                 --archive-areas 'main contrib non-free non-free-firmware' \
-                --bootappend-live "boot=live components username=jardson" \
+                --bootappend-live 'boot=live components username=jardson' \
                 --iso-volume 'ISO-LOUCA' \
                 --mirror-bootstrap http://deb.debian.org/debian \
                 --mirror-chroot http://deb.debian.org/debian \
