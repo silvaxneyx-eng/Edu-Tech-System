@@ -1,0 +1,27 @@
+#!/bin/bash
+# ================================================================
+# Hook 0400: Compilação e instalação do ms-sys a partir do código fonte
+# Executado dentro do chroot durante o build da ISO
+# ================================================================
+set -e
+
+echo "[HOOK] Compilando e instalando ms-sys..."
+
+# Instalar dependências temporárias de build
+apt-get update -qq
+apt-get install -y --no-install-recommends build-essential gettext wget ca-certificates
+
+# Baixar e compilar ms-sys
+cd /tmp
+wget -q https://downloads.sourceforge.net/project/ms-sys/ms-sys/2.6.0/ms-sys-2.6.0.tar.gz
+tar -xzf ms-sys-2.6.0.tar.gz
+cd ms-sys-2.6.0
+make
+make install
+
+# Limpar arquivos temporários e remover ferramentas de build desnecessárias
+cd /
+rm -rf /tmp/ms-sys*
+apt-get purge -y --autoremove build-essential gettext
+
+echo "[HOOK] ms-sys instalado com sucesso em /usr/local/bin/ms-sys!"

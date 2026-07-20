@@ -70,6 +70,7 @@ parted
 
 # ── Recuperação de dados ──────────────────────────────────────
 ddrescue
+testdisk
 
 # ── Rede e Conectividade ──────────────────────────────────────
 nmap
@@ -119,6 +120,12 @@ tree
 ncdu
 tmux
 bash-completion
+
+# ── Bibliotecas para App GTK Gráfico ──────────────────────────
+python3
+python3-gobject
+gtk4
+libadwaita
 
 # ── Utilitários de Arquivo ────────────────────────────────────
 file-roller
@@ -176,21 +183,45 @@ mkdir -p /home/jardson/Desktop
 mkdir -p /home/jardson/Documentos
 mkdir -p /home/jardson/.config/autostart
 
-# ── Tema escuro + Tela sem bloqueio ──────────────────────────
-cat > /home/jardson/.config/autostart/setup.desktop << 'DTEOF'
-[Desktop Entry]
-Type=Application
-Exec=bash -c "gsettings set org.gnome.desktop.interface color-scheme prefer-dark; gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'; gsettings set org.gnome.desktop.screensaver lock-enabled false; gsettings set org.gnome.desktop.session idle-delay 0; gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'; gsettings set org.gnome.desktop.background picture-uri 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.desktop.background picture-uri-dark 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.desktop.background picture-options 'zoom'; gsettings set org.gnome.desktop.screensaver picture-uri 'file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'; gsettings set org.gnome.shell favorite-apps \"['menu-tecnico.desktop', 'org.gnome.Nautilus.desktop', 'gparted.desktop', 'firefox.desktop']\""
-Hidden=false
-X-GNOME-Autostart-enabled=true
-Name=Setup Tecnico
-DTEOF
+# ── Tema escuro + Tela sem bloqueio + Wallpaper (via dconf) ──────────────────────────
+mkdir -p /etc/dconf/profile
+cat > /etc/dconf/profile/user << 'PROFILEEOF'
+user-db:user
+system-db:local
+PROFILEEOF
+
+mkdir -p /etc/dconf/db/local.d
+cat > /etc/dconf/db/local.d/00-tecnico << 'DCONFEOF'
+[org/gnome/desktop/interface]
+color-scheme='prefer-dark'
+gtk-theme='Adwaita-dark'
+
+[org/gnome/desktop/background]
+picture-uri='file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'
+picture-uri-dark='file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'
+picture-options='zoom'
+
+[org/gnome/desktop/screensaver]
+lock-enabled=false
+picture-uri='file:///usr/share/wallpapers/edutecnico/wallpaper4_1920x1080.png'
+
+[org/gnome/desktop/session]
+idle-delay=uint32 0
+
+[org/gnome/settings-daemon/plugins/power]
+sleep-inactive-ac-type='nothing'
+
+[org/gnome/shell]
+favorite-apps=['menu-tecnico.desktop', 'org.gnome.Nautilus.desktop', 'gparted.desktop', 'firefox.desktop']
+DCONFEOF
+
+dconf update || true
 
 # Autostart para o Menu Técnico
 cat > /home/jardson/.config/autostart/abrir-menu.desktop << 'MENUSTARTEOF'
 [Desktop Entry]
 Type=Application
-Exec=bash /home/jardson/Scripts/menu-tecnico.sh
+Exec=python3 /home/jardson/Scripts/edutech-tecnico.py
 Hidden=false
 X-GNOME-Autostart-enabled=true
 Name=Abrir Menu Tecnico
@@ -200,7 +231,7 @@ MENUSTARTEOF
 cat > /home/jardson/.config/autostart/montar-discos.desktop << 'MONTEOF'
 [Desktop Entry]
 Type=Application
-Exec=bash -c "gnome-terminal --title='🔍 Montagem Automática' -- bash -c 'sudo bash /home/jardson/Scripts/montar-discos-automatico.sh; echo; read -p \"Pressione ENTER para fechar...\"'"
+Exec=gnome-terminal --title="🔍 Montagem Automática" -- bash -c "sudo bash /home/jardson/Scripts/montar-discos-automatico.sh; echo; read -p 'Pressione ENTER para fechar...'"
 Hidden=false
 X-GNOME-Autostart-enabled=true
 Name=Montar Discos Clientes
@@ -217,7 +248,7 @@ cat > /usr/share/applications/menu-tecnico.desktop << 'GLOBALMENUEOF'
 Type=Application
 Name=Menu Técnico EduTech
 Comment=Painel de ferramentas de reparo
-Exec=bash /home/jardson/Scripts/menu-tecnico.sh
+Exec=python3 /home/jardson/Scripts/edutech-tecnico.py
 Terminal=false
 Icon=utilities-system-monitor
 Categories=System;Utility;
@@ -229,10 +260,9 @@ cat > /home/jardson/Desktop/Menu-Tecnico.desktop << 'MENUEOF'
 Type=Application
 Name=Menu Técnico EduTech
 Comment=Abrir menu de ferramentas do técnico
-Exec=bash /home/jardson/Scripts/menu-tecnico.sh
+Exec=python3 /home/jardson/Scripts/edutech-tecnico.py
 Terminal=false
 Icon=utilities-system-monitor
-X-GNOME-Autostart-enabled=true
 MENUEOF
 
 # ── Atalho: Diagnóstico de Discos ────────────────────────────
@@ -240,8 +270,8 @@ cat > /home/jardson/Desktop/Diagnostico-Discos.desktop << 'DIAGEOF'
 [Desktop Entry]
 Type=Application
 Name=Diagnóstico de Discos
-Exec=bash -c "bash /home/jardson/Scripts/diagnostico-discos.sh; read -p 'Pressione ENTER para sair...'"
-Terminal=true
+Exec=gnome-terminal --title="🔍 Diagnóstico de Discos" -- bash -c "bash /home/jardson/Scripts/diagnostico-discos.sh; read -p 'Pressione ENTER para sair...'"
+Terminal=false
 Icon=drive-harddisk
 DIAGEOF
 
@@ -250,8 +280,8 @@ cat > /home/jardson/Desktop/Scanner-Virus.desktop << 'VIRUSEOF'
 [Desktop Entry]
 Type=Application
 Name=Scanner de Vírus Offline
-Exec=bash -c "bash /home/jardson/Scripts/scanner-virus-offline.sh; read -p 'Pressione ENTER para sair...'"
-Terminal=true
+Exec=gnome-terminal --title="🛡️ Scanner de Vírus" -- bash -c "bash /home/jardson/Scripts/scanner-virus-offline.sh; read -p 'Pressione ENTER para sair...'"
+Terminal=false
 Icon=security-high
 VIRUSEOF
 
@@ -260,8 +290,8 @@ cat > /home/jardson/Desktop/Backup-Perfil.desktop << 'BACKUPEOF'
 [Desktop Entry]
 Type=Application
 Name=Backup de Perfil do Usuário
-Exec=bash -c "bash /home/jardson/Scripts/backup-perfil-automatico.sh; read -p 'Pressione ENTER para sair...'"
-Terminal=true
+Exec=gnome-terminal --title="📂 Backup de Perfil" -- bash -c "bash /home/jardson/Scripts/backup-perfil-automatico.sh; read -p 'Pressione ENTER para sair...'"
+Terminal=false
 Icon=document-save
 BACKUPEOF
 
@@ -270,8 +300,8 @@ cat > /home/jardson/Desktop/Resetar-Senha.desktop << 'SENHAEOF'
 [Desktop Entry]
 Type=Application
 Name=Resetar Senha Windows
-Exec=bash -c "bash /home/jardson/Scripts/resetar-senha-automatico.sh; read -p 'Pressione ENTER para sair...'"
-Terminal=true
+Exec=gnome-terminal --title="🔑 Resetar Senha" -- bash -c "bash /home/jardson/Scripts/resetar-senha-automatico.sh; read -p 'Pressione ENTER para sair...'"
+Terminal=false
 Icon=dialog-password
 SENHAEOF
 
@@ -334,6 +364,7 @@ chown -R jardson:jardson /home/jardson
 # ── Copiar todos os scripts para a ISO ───────────────────────
 mkdir -p $INSTALL_ROOT/home/jardson/Scripts
 cp /build/scripts/*.sh $INSTALL_ROOT/home/jardson/Scripts/ 2>/dev/null || true
+cp /build/scripts/*.py $INSTALL_ROOT/home/jardson/Scripts/ 2>/dev/null || true
 cp /build/scripts/*.ps1 $INSTALL_ROOT/home/jardson/Scripts/ 2>/dev/null || true
 cp /build/scripts/*.cmd $INSTALL_ROOT/home/jardson/Scripts/ 2>/dev/null || true
 chmod -R +x $INSTALL_ROOT/home/jardson/Scripts/

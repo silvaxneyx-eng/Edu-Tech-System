@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=EduTech Técnico
+Comment=Kit de ferramentas de manutenção para técnicos — EduTechAnderlineNet
+Exec=python3 /usr/local/lib/iso-louca/edutech-tecnico.py
+Icon=utilities-system-monitor
+Terminal=false
+Categories=System;Utility;
+Keywords=tecnico;reparo;disco;backup;virus;senha;

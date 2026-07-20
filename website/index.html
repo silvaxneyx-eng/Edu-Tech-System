@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTech Técnico | Kit de Manutenção Avançado</title>
+    <meta name="description" content="O painel gráfico definitivo para técnicos de informática no Linux. Ferramentas essenciais para manutenção de PCs, direto no seu SSD ou Pendrive.">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+    <div class="background-effects">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <header class="navbar">
+        <div class="logo">
+            <i class="ph-fill ph-wrench"></i> EduTech Técnico
+        </div>
+        <nav>
+            <a href="#features">Recursos</a>
+            <a href="#install" class="btn-primary-outline">Baixar Agora</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <div class="badge">🔥 Novo Lançamento v2.0</div>
+                <h1 class="hero-title">A Oficina de Manutenção <span>no seu Linux</span></h1>
+                <p class="hero-subtitle">
+                    Chega de digitar comandos complexos. Tenha um painel gráfico premium em GTK4 para resetar senhas (Windows/Mac/Linux), fazer backup de perfis, testar HDs e escanear vírus.
+                </p>
+                <div class="hero-actions">
+                    <a href="#install" class="btn-primary"><i class="ph-bold ph-download-simple"></i> Instalar App Gráfico</a>
+                    <a href="https://github.com/silvaxneyx-eng/Edu-Tech-System" target="_blank" class="btn-secondary"><i class="ph-bold ph-github-logo"></i> Ver no GitHub</a>
+                </div>
+                <div class="hero-terminal">
+                    <div class="term-header">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                        <div class="term-title">Instalação Rápida (Qualquer Linux com GNOME)</div>
+                    </div>
+                    <div class="term-body">
+                        <code><span class="prompt">$</span> curl -sSL https://raw.githubusercontent.com/silvaxneyx-eng/Edu-Tech-System/main/install.sh | bash</code>
+                        <button class="copy-btn" id="copyCmd" title="Copiar comando"><i class="ph ph-copy"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features-section">
+            <div class="section-header">
+                <h2>Tudo que um técnico precisa</h2>
+                <p>Ferramentas automatizadas e inteligentes para agilizar seus atendimentos.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="icon-wrapper"><i class="ph-fill ph-password"></i></div>
+                    <h3>Reset de Senha Multi-SO</h3>
+                    <p>Detecta e remove senhas de contas locais do Windows (SAM), distribuições Linux (chroot) e até forja o recadastro de admin no macOS (.AppleSetupDone).</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon-wrapper"><i class="ph-fill ph-hard-drives"></i></div>
+                    <h3>Detecção Inteligente</h3>
+                    <p>Monta automaticamente discos NTFS, FAT32, BTRFS e EXT4 ignorando partições de hibernação, pronto para você navegar como administrador.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon-wrapper"><i class="ph-fill ph-shield-check"></i></div>
+                    <h3>Antivírus Offline</h3>
+                    <p>Fez o boot pelo pendrive? Use a engine poderosa do ClamAV para escanear partições do cliente em busca de malwares sem ligar o SO dele.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon-wrapper"><i class="ph-fill ph-copy-simple"></i></div>
+                    <h3>Backup de Perfil</h3>
+                    <p>Detecta a pasta "Users" do Windows e copia tudo o que importa (Documentos, Desktop, Fotos, Downloads) direto para o seu HD externo com um clique.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon-wrapper"><i class="ph-fill ph-heartbeat"></i></div>
+                    <h3>Diagnóstico de Hardware</h3>
+                    <p>Relatório S.M.A.R.T completo da saúde de discos rígidos e NVMe, além de puxar toda a ficha técnica do processador e memória.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon-wrapper"><i class="ph-fill ph-paint-brush-broad"></i></div>
+                    <h3>Interface GTK4 Nativa</h3>
+                    <p>Design premium que se camufla perfeitamente no GNOME, usando as bibliotecas Adwaita com tema escuro e terminal integrado no próprio app.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="install" class="download-section">
+            <div class="glass-panel">
+                <h2>Como obter a ferramenta?</h2>
+                <p>Você pode compilar a ISO completa para pendrive ou apenas instalar o painel no seu Linux atual.</p>
+                
+                <div class="download-options">
+                    <div class="download-box">
+                        <h3>1. Pacote Multi-SO (Recomendado)</h3>
+                        <p>Baixa o painel com suporte nativo para Windows (.bat) e Linux (.sh). Não precisa instalar, roda direto da pasta.</p>
+                        <a href="edutech-tecnico-v4.zip" class="btn-primary" download><i class="ph-bold ph-download-simple"></i> Baixar ZIP</a>
+                    </div>
+                    
+                    <div class="download-box">
+                        <h3>2. Baixar a ISO Completa</h3>
+                        <p>A "ISO Louca" é um sistema bootável pronto com tudo isso dentro. Ideal para levar no pendrive via Ventoy.</p>
+                        <a href="https://github.com/silvaxneyx-eng/Edu-Tech-System/actions" target="_blank" class="btn-primary-outline"><i class="ph-bold ph-disc"></i> Ver ISOs no GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 EduTechAnderlineNet. Criado por Jardson. Código aberto no GitHub.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

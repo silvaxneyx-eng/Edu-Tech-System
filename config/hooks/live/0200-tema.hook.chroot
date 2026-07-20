@@ -30,7 +30,9 @@ EOF
 
 # --- Configuração do PCManFM-Qt (dark) ---
 mkdir -p /etc/skel/.config/pcmanfm-qt/default
-cat > /etc/skel/.config/pcmanfm-qt/default/settings.conf << 'EOF'
+mkdir -p /etc/skel/.config/pcmanfm-qt/lxqt
+
+cat > /etc/skel/.config/pcmanfm-qt/lxqt/settings.conf << 'EOF'
 [Behavior]
 NoUsbTrash=false
 
@@ -45,6 +47,8 @@ ShowWmMenu=false
 [System]
 FallbackIconThemeName=Papirus-Dark
 EOF
+
+cp /etc/skel/.config/pcmanfm-qt/lxqt/settings.conf /etc/skel/.config/pcmanfm-qt/default/settings.conf
 
 # --- Configuração do qterminal (dark) ---
 mkdir -p /etc/skel/.config/qterminal.org

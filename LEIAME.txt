@@ -1,0 +1,27 @@
+=======================================================
+ EDUTECH TÉCNICO V4.0 - O Canivete Suíço
+=======================================================
+
+Bem-vindo(a) ao painel de manutenção EduTech!
+Este pacote contém todas as ferramentas para uso no Windows e Linux.
+
+[ PARA USUÁRIOS WINDOWS ]
+1. Dê dois cliques no arquivo "install.bat".
+2. Ele vai conferir se o Python está instalado e baixará a interface gráfica.
+3. Um atalho "EduTech Técnico" aparecerá na sua Área de Trabalho.
+
+[ PARA USUÁRIOS LINUX ]
+Opção A (Instalação no sistema atual):
+Abra o terminal, navegue até esta pasta e execute:
+$ sudo ./install.sh
+
+Opção B (Rodar sem instalar):
+Abra o terminal, navegue até a pasta "scripts" e execute:
+$ python3 edutech-tecnico.py
+
+=======================================================
+ATENÇÃO:
+Algumas funções avançadas (como Zerar o HD e Quebrar Senhas de arquivos de sistema protegidos) 
+só estão disponíveis se você der boot pelo pendrive da "ISO Louca". 
+No Windows, essas ferramentas ficarão bloqueadas para sua segurança.
+=======================================================

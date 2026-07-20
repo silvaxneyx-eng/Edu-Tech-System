@@ -20,8 +20,23 @@ fi
 particoes=$(lsblk -lo NAME,FSTYPE | grep -i ntfs | awk '{print $1}')
 
 if [ -z "$particoes" ]; then
-    echo "Nenhuma partição NTFS detectada."
-    exit 1
+    echo "⚠️ Nenhuma partição Windows (NTFS) detectada."
+    echo "Alternativas disponíveis:"
+    echo "1) Escanear discos montados do Linux/Mac em /mnt/clientes"
+    echo "2) Escanear a pasta Downloads do usuário atual"
+    echo "3) Sair"
+    read -p "Escolha uma opção: " op_scan
+    if [ "$op_scan" == "1" ]; then
+        if [ ! -d "/mnt/clientes" ] || [ -z "$(ls -A /mnt/clientes 2>/dev/null)" ]; then
+            echo "A pasta /mnt/clientes está vazia. Por favor, execute 'Montar Discos' primeiro."
+            exit 1
+        fi
+        particoes="clientes"
+    elif [ "$op_scan" == "2" ]; then
+        particoes="downloads"
+    else
+        exit 1
+    fi
 fi
 
 echo ""
@@ -29,38 +44,45 @@ echo "[2/3] Montando partições e escaneando..."
 
 infectados=0
 for part in $particoes; do
-    device="/dev/$part"
-    mount_point="/mnt/scan_$part"
-    mkdir -p "$mount_point"
+    if [ "$part" == "clientes" ]; then
+        mount_point="/mnt/clientes"
+        device="Discos Montados (Linux/Mac)"
+        targets="\"$mount_point\""
+    elif [ "$part" == "downloads" ]; then
+        mount_point="$HOME/Downloads"
+        device="Pasta Downloads"
+        targets="\"$mount_point\""
+    else
+        device="/dev/$part"
+        mount_point="/mnt/scan_$part"
+        mkdir -p "$mount_point"
 
-    # Monta somente leitura para segurança
-    mount -t ntfs-3g -o ro "$device" "$mount_point" 2>/dev/null
-    if [ $? -ne 0 ]; then
-        echo "  Não conseguiu montar $device. Pulando..."
-        continue
+        # Monta somente leitura para segurança
+        mount -t ntfs-3g -o ro "$device" "$mount_point" 2>/dev/null
+        if [ $? -ne 0 ]; then
+            echo "  Não conseguiu montar $device. Pulando..."
+            continue
+        fi
+
+        # Para NTFS, procura pastas padrão
+        targets=""
+        for dir in "Windows/Temp" "Users" "ProgramData" "Program Files" "Program Files (x86)"; do
+            if [ -d "$mount_point/$dir" ]; then
+                targets="$targets \"$mount_point/$dir\""
+            fi
+        done
+
+        if [ -z "$targets" ]; then
+            targets="\"$mount_point\""
+        fi
     fi
 
     echo ""
     echo "  Escaneando $device..."
-    echo "  (Isso pode demorar vários minutos dependendo do tamanho do disco)"
+    echo "  (Isso pode demorar vários minutos)"
+    echo "  Alvos: $targets"
     echo ""
 
-    # Escaneia apenas as pastas que de fato existirem para evitar erros do clamscan
-    targets=""
-    for dir in "Windows/Temp" "Users" "ProgramData" "Program Files" "Program Files (x86)"; do
-        if [ -d "$mount_point/$dir" ]; then
-            targets="$targets \"$mount_point/$dir\""
-        fi
-    done
-
-    if [ -z "$targets" ]; then
-        targets="\"$mount_point\"" # Escaneia tudo se não achar nenhuma pasta padrão
-    fi
-
-    echo "Alvos do escaneamento: $targets"
-    echo ""
-
-    # Executa o clamscan usando eval para interpretar as aspas corretamente
     eval "clamscan -r --bell --infected $targets" 2>/dev/null | tee /tmp/scan_${part}.log
 
     found=$(grep "Infected files:" /tmp/scan_${part}.log 2>/dev/null | awk '{print $3}')
@@ -72,7 +94,10 @@ for part in $particoes; do
         echo "  ✅ Nenhum vírus encontrado em $device."
     fi
 
-    umount "$mount_point" 2>/dev/null
+    # Desmonta apenas se foi nós que montamos
+    if [ "$part" != "clientes" ] && [ "$part" != "downloads" ]; then
+        umount "$mount_point" 2>/dev/null
+    fi
 done
 
 echo ""

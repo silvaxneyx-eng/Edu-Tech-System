@@ -2,7 +2,17 @@
 # ============================================================
 # Script de Conexão à Pasta Compartilhada na Rede (SMB/CIFS)
 # EduTechAnderlineNet - ISO Técnico
+# Compatível com GNOME (Nautilus) e LXQt (PCManFM-Qt)
 # ============================================================
+
+# Detecta o gerenciador de arquivos
+if command -v nautilus &>/dev/null; then
+    FILE_MGR="nautilus"
+elif command -v pcmanfm-qt &>/dev/null; then
+    FILE_MGR="pcmanfm-qt"
+else
+    FILE_MGR="xdg-open"
+fi
 
 # Cria o ponto de montagem na ISO
 mkdir -p /mnt/rede_local
@@ -59,9 +69,9 @@ fi
 if [ $? -eq 0 ]; then
     zenity --info \
         --title="✓ Sucesso!" \
-        --text="Pasta de rede montada com sucesso em:\n📂 /mnt/rede_local\n\nAbrindo o Nautilus..."
+        --text="Pasta de rede montada com sucesso em:\n📂 /mnt/rede_local\n\nAbrindo o gerenciador de arquivos..."
     sudo chown -R jardson:jardson /mnt/rede_local 2>/dev/null || true
-    nautilus /mnt/rede_local &
+    $FILE_MGR /mnt/rede_local &
 else
     zenity --error \
         --title="❌ Erro na Conexão" \

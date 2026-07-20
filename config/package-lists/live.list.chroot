@@ -47,6 +47,9 @@ parted
 dosfstools
 ntfs-3g
 exfatprogs
+chntpw
+pv
+nvme-cli
 
 # --- Rede e Diagnóstico ---
 nmap

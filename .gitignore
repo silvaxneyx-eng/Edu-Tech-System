@@ -18,3 +18,7 @@ scripts/Sistema-*.txt
 scripts/WiFi-Perfis-*.txt
 scripts/Backup-Perfil-*
 MS Office setup/ActiveShareDir/
+
+# Compilados locais e Docker
+build/
+*.iso
