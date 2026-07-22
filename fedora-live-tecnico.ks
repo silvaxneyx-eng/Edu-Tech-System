@@ -123,6 +123,8 @@ bash-completion
 
 # ── Bibliotecas para App GTK Gráfico ──────────────────────────
 python3
+python3-pip
+python3-tkinter
 python3-gobject
 gtk4
 libadwaita
@@ -146,6 +148,9 @@ gedit
 %end
 
 %post
+# ── Instalar biblioteca CustomTkinter para a GUI do Técnico ──────
+pip3 install --break-system-packages customtkinter packaging 2>/dev/null || true
+
 # ── Garante senhas e permissões (sem senha para o técnico) ────────
 useradd -m -G wheel jardson 2>/dev/null || true
 passwd -d root 2>/dev/null || true

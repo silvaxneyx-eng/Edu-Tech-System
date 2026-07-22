@@ -10,17 +10,19 @@ import platform
 import subprocess
 import threading
 
-# Tenta importar customtkinter. Se falhar, avisa para instalar.
+# Tenta importar customtkinter. Se falhar, faz fallback automático para o Zenity (menu-tecnico.sh).
 try:
     import customtkinter as ctk
 except ImportError:
-    print("ERRO: A biblioteca 'customtkinter' não está instalada.")
-    print("Instale rodando:")
-    if platform.system() == "Windows":
-        print("  pip install customtkinter")
+    SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+    zenity_script = os.path.join(SCRIPT_DIR, "menu-tecnico.sh")
+    if os.path.exists(zenity_script):
+        os.execv("/bin/bash", ["bash", zenity_script])
+    elif os.path.exists("/home/jardson/Scripts/menu-tecnico.sh"):
+        os.execv("/bin/bash", ["bash", "/home/jardson/Scripts/menu-tecnico.sh"])
     else:
-        print("  sudo pip3 install customtkinter")
-    sys.exit(1)
+        print("ERRO: A biblioteca 'customtkinter' não está instalada.")
+        sys.exit(1)
 
 # Modo Escuro Global
 ctk.set_appearance_mode("Dark")
