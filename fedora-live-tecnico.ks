@@ -40,6 +40,10 @@ efibootmgr
 @base-x
 gnome-shell
 gnome-terminal
+gnome-console
+ptyxis
+xterm
+qterminal
 gnome-control-center
 gnome-system-monitor
 gnome-disk-utility
@@ -203,6 +207,9 @@ PROFILEEOF
 
 mkdir -p /etc/dconf/db/local.d
 cat > /etc/dconf/db/local.d/00-tecnico << 'DCONFEOF'
+[org/gnome/nautilus/preferences]
+executable-text-activation='launch'
+
 [org/gnome/desktop/interface]
 color-scheme='prefer-dark'
 gtk-theme='Adwaita-dark'
