@@ -213,6 +213,18 @@ class EduTechApp(ctk.CTk):
                 ]
             },
             {
+                "title": "Multiboot (WPE)",
+                "groups": [
+                    {
+                        "title": "Instalação & ISOs",
+                        "tools": [
+                            {"name": "Lançador e Instalador de ISOs", "desc": "Detecta e instala/inicia ISOs do Windows ou Linux", "script": "iso-launcher.sh", "sudo": True, "linux_only": True},
+                            {"name": "Ghost Toolbox Rev11", "desc": "Instalador e otimizador da Ghost Spectre (Windows/Wine)", "script": "wine /home/jardson/Tools/GhostToolbox/Ghost.Toolbox-Rev11_setup.x64.exe 2>/dev/null || wine '/run/media/jardson/VENTOY/Ghost Toolbox/Ghost.Toolbox-Rev11_setup.x64.exe'", "sudo": False, "win_script": "Ghost.Toolbox-Rev11_setup.x64.exe"},
+                        ]
+                    }
+                ]
+            },
+            {
                 "title": "Rede & Info",
                 "groups": [
                     {

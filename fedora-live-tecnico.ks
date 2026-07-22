@@ -130,6 +130,12 @@ libadwaita
 # ── Utilitários de Arquivo ────────────────────────────────────
 file-roller
 
+# ── Utilitários WPE / Multiboot ────────────────────────────────
+wimlib-utils
+dialog
+qemu-kvm
+qemu-system-x86-core
+
 # ── Editor de Texto Gráfico ───────────────────────────────────
 gedit
 
@@ -314,6 +320,28 @@ Exec=pkexec gparted
 Icon=gparted
 GPARTED
 
+# ── Atalho: Lançador Multiboot de ISOs (WPE) ─────────────────
+cat > /home/jardson/Desktop/Lancador-ISOs.desktop << 'ISOEOF'
+[Desktop Entry]
+Type=Application
+Name=Lançador de ISOs (WPE Multiboot)
+Comment=Carregar e instalar ISOs do Windows ou Linux
+Exec=gnome-terminal --title="💿 Lançador de ISOs" -- bash -c "sudo bash /home/jardson/Scripts/iso-launcher.sh"
+Terminal=false
+Icon=media-optical
+ISOEOF
+
+# ── Atalho: Ghost Toolbox ────────────────────────────────────
+cat > /home/jardson/Desktop/Ghost-Toolbox.desktop << 'GHOSTEOF'
+[Desktop Entry]
+Type=Application
+Name=Ghost Toolbox Rev11
+Comment=Ferramenta de otimização e pacotes Ghost Spectre
+Exec=wine /home/jardson/Tools/GhostToolbox/Ghost.Toolbox-Rev11_setup.x64.exe
+Terminal=false
+Icon=preferences-other
+GHOSTEOF
+
 # ── Permissões dos atalhos ────────────────────────────────────
 chmod +x /home/jardson/Desktop/*.desktop
 
@@ -373,6 +401,11 @@ chroot $INSTALL_ROOT chown -R jardson:jardson /home/jardson/Scripts 2>/dev/null 
 # ── Copiar arquivo de explicação de ferramentas para o Desktop ──────
 cp /build/Explica-Ferramentas.txt $INSTALL_ROOT/home/jardson/Desktop/ 2>/dev/null || true
 chroot $INSTALL_ROOT chown jardson:jardson /home/jardson/Desktop/Explica-Ferramentas.txt 2>/dev/null || true
+
+# ── Copiar Ghost Toolbox para a ISO ─────────────────────────
+mkdir -p "$INSTALL_ROOT/home/jardson/Tools/GhostToolbox"
+cp -rf /build/Ghost\ Toolbox/* "$INSTALL_ROOT/home/jardson/Tools/GhostToolbox/" 2>/dev/null || true
+chroot $INSTALL_ROOT chown -R jardson:jardson /home/jardson/Tools 2>/dev/null || true
 
 # ── Copiar wallpapers para dentro da ISO ─────────────────────
 mkdir -p $INSTALL_ROOT/usr/share/wallpapers/edutecnico

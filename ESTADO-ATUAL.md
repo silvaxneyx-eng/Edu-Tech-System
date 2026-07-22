@@ -128,14 +128,14 @@ Mas o Windows retorna erro de "Plataforma de Máquina Virtual" mesmo com virtual
 
 ---
 
-## 🎯 Próximos passos após build funcionar
+## 🚀 Novo Recurso: Lançador & Instalador Multiboot (WPE)
 
-1. Testar boot no Ventoy
-2. Verificar se GNOME abre (se a versão tiver interface gráfica)  
-3. Adicionar pacotes extras um a um
-4. Ativar WSL2 (reiniciar PC após ativar recurso Plataforma de Máquina Virtual)
-5. Testar build local com Docker
+- **Suporte a Múltiplas ISOs**: O sistema agora varre discos e pendrives por imagens `.iso` (Windows 10/11, distribuições Linux, etc.).
+- **Instalação e Boot Direto**:
+  - Teste/Instalação de ISOs via Máquina Virtual QEMU/KVM sem reiniciar o computador.
+  - Ferramenta de descompactação e aplicação de imagens Windows (`wimlib-utils`).
+  - Lançador gráfico/CLI integrado (`iso-launcher.sh`) e atalho no Menu Técnico EduTech.
 
 ---
 
-*Última atualização: 18/07/2026 — commit b9f8fd3*
+*Última atualização: 22/07/2026 — Lançador Multiboot WPE*

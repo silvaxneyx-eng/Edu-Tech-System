@@ -1,0 +1,29 @@
+{
+    "control": [
+        { "VTOY_DEFAULT_SEARCH_ROOT": "/ISOs" },
+        { "VTOY_MENU_TIMEOUT": "10" },
+        { "VTOY_DEFAULT_IMAGE": "/ISOs/Tecnico/ISO_LOUCA_BOOT.iso" },
+        { "VTOY_WIN11_BYPASS_CHECK": "1" },
+        { "VTOY_WIN11_BYPASS_NRO": "1" }
+    ],
+    "menu_alias": [
+        {
+            "image": "/ISOs/Windows/Win11_Ghost_Spectre.iso",
+            "alias": "💿 Windows 11 Ghost Spectre (Superlite / Compact - Bypass TPM & RAM)"
+        },
+        {
+            "image": "/ISOs/Windows/Win10_Pro_x64.iso",
+            "alias": "💿 Windows 10 Pro 64-bit Oficial"
+        },
+        {
+            "image": "/ISOs/Tecnico/ISO_LOUCA_BOOT.iso",
+            "alias": "🔧 ISO LOuca - Kit Técnico Live (GNOME / Senhas / Antivírus / WPE)"
+        }
+    ],
+    "auto_install": [
+        {
+            "image": "/ISOs/Windows/Win11_Ghost_Spectre.iso",
+            "template": "/ventoy/autounattend.xml"
+        }
+    ]
+}

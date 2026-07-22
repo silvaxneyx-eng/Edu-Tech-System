@@ -22,3 +22,6 @@ MS Office setup/ActiveShareDir/
 # Compilados locais e Docker
 build/
 *.iso
+__pycache__/
+*.pyc
+

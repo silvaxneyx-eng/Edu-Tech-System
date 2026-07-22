@@ -18,8 +18,10 @@ $projeto = $PSScriptRoot
 $pastas = @(
     'ISOs\Windows',
     'ISOs\Linux',
+    'ISOs\Tecnico',
     'ISOs\Recovery',
     'ISOs\Utilitarios',
+    'Ghost Toolbox',
     'Tools',
     'Drivers',
     'Drivers\Intel',
@@ -30,7 +32,8 @@ $pastas = @(
     'Drivers\OEM\HP',
     'Drivers\OEM\Lenovo',
     'Scripts',
-    'MS Office setup'
+    'MS Office setup',
+    'ventoy'
 )
 
 foreach ($p in $pastas) {
@@ -53,12 +56,18 @@ if ($CopiarScripts) {
 
     Copy-Item -LiteralPath (Join-Path $projeto 'ferramentas.json') -Destination (Join-Path $raizUsb 'ferramentas.json') -Force
     Copy-Item -LiteralPath (Join-Path $projeto 'README.md') -Destination (Join-Path $raizUsb 'README-Projeto.md') -Force
-    Copy-Item -LiteralPath (Join-Path $projeto 'ISOs') -Destination (Join-Path $raizUsb 'ISOs') -Recurse -Force
     Copy-Item -LiteralPath (Join-Path $projeto 'Drivers\README.md') -Destination (Join-Path $raizUsb 'Drivers\README.md') -Force
+
+    # Copiar configurações Ventoy (ventoy.json e autounattend.xml)
+    $origemConfig = Join-Path $projeto 'config'
+    $destVentoy = Join-Path $raizUsb 'ventoy'
+    Copy-Item -LiteralPath (Join-Path $origemConfig 'ventoy.json') -Destination (Join-Path $destVentoy 'ventoy.json') -Force -ErrorAction SilentlyContinue
+    Copy-Item -LiteralPath (Join-Path $origemConfig 'autounattend.xml') -Destination (Join-Path $destVentoy 'autounattend.xml') -Force -ErrorAction SilentlyContinue
 }
 
-Write-Host "`nPendrive ${LetraUSB}: pronto." -ForegroundColor Green
+Write-Host "`nPendrive ${LetraUSB}: pronto para uso no Ventoy." -ForegroundColor Green
 Write-Host "Proximos passos:"
-Write-Host "  1. Instale Ventoy (Tools\Ventoy ou baixe do GitHub)"
-Write-Host "  2. .\Scripts\Baixar-Ferramentas.ps1 -Destino '${LetraUSB}:\Tools'"
-Write-Host "  3. Copie ISOs para ISOs\Windows, ISOs\Recovery, etc."
+Write-Host "  1. Formate o pendrive com o Ventoy (se ainda nao o fez)"
+Write-Host "  2. Copie a ISO do Windows 11 Ghost Spectre para: ${LetraUSB}:\ISOs\Windows\Win11_Ghost_Spectre.iso"
+Write-Host "  3. Copie a ISO LOuca para: ${LetraUSB}:\ISOs\Tecnico\ISO_LOUCA_BOOT.iso"
+
