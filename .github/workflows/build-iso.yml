@@ -38,14 +38,9 @@ jobs:
           ls -lh ISO_LOUCA_BOOT.iso || (echo "ERRO: ISO não gerada!" && exit 1)
           cp ISO_LOUCA_BOOT.iso ISO-LOUCA-GNOME.iso
 
-      - name: Upload da ISO como Release
-        uses: softprops/action-gh-release@v2
+      - name: Upload da ISO como Artifact
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: build-${{ github.run_number }}
-          name: ISO LOUCA - Build ${{ github.run_number }}
-          files: ISO-LOUCA-GNOME.iso
-          body: "Build gerado automaticamente via GitHub Actions (Fedora 44 GNOME)."
-          draft: false
-          prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: ISO-LOUCA-GNOME
+          path: ISO-LOUCA-GNOME.iso
+          retention-days: 7
